@@ -1,0 +1,260 @@
+.enfermedades-page {
+  min-height: 100vh;
+}
+
+.enfermedades-header {
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.enfermedades-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.enfermedades-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.filter-section h3 {
+  margin-bottom: 1rem;
+  color: #8b4513;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #d2b48c;
+  background: white;
+  color: #8b4513;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.category-btn:hover,
+.category-btn.active {
+  background: #d2b48c;
+  color: white;
+}
+
+.category-icon {
+  font-size: 1.2rem;
+}
+
+.enfermedades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.enfermedad-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-left: 4px solid #d2b48c;
+  transition: all 0.3s ease;
+}
+
+.enfermedad-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  color: #8b4513;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.expand-btn {
+  background: #d2b48c;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.expand-btn:hover {
+  background: #8b4513;
+}
+
+.descripcion {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.sintomas-preview h4 {
+  color: #8b4513;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.sintomas-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sintoma-tag {
+  background: #f0e68c;
+  color: #8b4513;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.more-tag {
+  background: #ddd;
+  color: #666;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.detalles-enfermedad {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detalles-enfermedad h4 {
+  color: #8b4513;
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.sintomas-completos ul,
+.prevencion ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sintomas-completos li,
+.prevencion li {
+  padding: 0.25rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.sintomas-completos li::before {
+  content: "⚕️";
+  position: absolute;
+  left: 0;
+}
+
+.prevencion li::before {
+  content: "✓";
+  color: #2e7d32;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.plantas-recomendadas {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.planta-recomendada {
+  background: white;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.planta-recomendada h5 {
+  color: #2e7d32;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.planta-recomendada p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.consultar-medico {
+  background: #fff3e0;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ff9800;
+}
+
+.consultar-medico h4 {
+  color: #ef6c00;
+  margin-top: 0;
+}
+
+.consultar-medico p {
+  color: #e65100;
+  margin: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .enfermedades-header h1 {
+    font-size: 2rem;
+  }
+  
+  .enfermedades-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .category-filters {
+    justify-content: center;
+  }
+  
+  .category-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
