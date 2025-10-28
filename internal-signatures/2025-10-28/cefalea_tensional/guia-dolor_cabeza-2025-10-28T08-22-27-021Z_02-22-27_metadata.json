@@ -1,0 +1,32 @@
+{
+  "document": {
+    "title": "Alivio Natural para el Dolor de Cabeza",
+    "type": "Cefalea tensional",
+    "fileName": "guia-dolor_cabeza-2025-10-28T08-22-27-021Z",
+    "generatedAt": "2025-10-28T08:22:27.027Z",
+    "contentSummary": {
+      "totalPlants": 3,
+      "totalRecommendations": 4
+    }
+  },
+  "signature": {
+    "authority": "V-Health Sistema de Medicina Natural",
+    "algorithm": "RSA-SHA256",
+    "signedAt": "2025-10-28T08:22:27.036Z",
+    "hash": "6bcf61bc45186252f73855e773dbadfa...",
+    "valid": true
+  },
+  "storage": {
+    "internalId": "VHEALTH_1761639747042_akkyle",
+    "category": "medical_document",
+    "classification": "signed_pdf_guide",
+    "accessLevel": "internal",
+    "retention": "7_years"
+  },
+  "audit": {
+    "createdBy": "system",
+    "createdAt": "2025-10-28T08:22:27.042Z",
+    "lastVerified": "2025-10-28T08:22:27.042Z",
+    "verificationCount": 0
+  }
+}

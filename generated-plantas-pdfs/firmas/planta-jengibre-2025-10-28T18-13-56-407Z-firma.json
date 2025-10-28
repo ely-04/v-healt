@@ -1,0 +1,39 @@
+{
+  "pdfInfo": {
+    "titulo": "Guía Completa: Jengibre",
+    "planta": "Jengibre",
+    "nombreCientifico": "Zingiber officinale",
+    "fileName": "planta-jengibre-2025-10-28T18-13-56-407Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-plantas-pdfs\\planta-jengibre-2025-10-28T18-13-56-407Z.html",
+    "fechaGeneracion": "2025-10-28T18:13:56.415Z",
+    "contenido": {
+      "propiedades": 3,
+      "usos": 4,
+      "categoria": "digestiva"
+    },
+    "hash": "0a7bf5ca4a194ccbe42188f64a414f6972a5cf65c1fe09d2bee001547904050d",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Guía Completa: Jengibre\",\"planta\":\"Jengibre\",\"nombreCientifico\":\"Zingiber officinale\",\"fechaGeneracion\":\"2025-10-28T18:13:56.415Z\",\"contenidoHash\":\"0a7bf5ca4a194ccbe42188f64a414f6972a5cf65c1fe09d2bee001547904050d\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"digestiva\"}",
+      "signature": "x3t79f4TMZJit0xrhVrR5lYW9KEOXBSb2WlZZeeRS9ZEWoPFOIlZpt6JHJXaHDYpwwJs3+Bsh6/xrw9VgQsdINpYMUPavfDeB/QoDwbJuJqhaaKplMuD+jvb5NotRgEFkc8qhB31o8H5qrLhPPBZTtdaHEy1/YwAJFCthxdDcgNXwkzQ7KFjDdaNMs3m3YFUAX/DhBaROYRtlb9EqKOnG7m3RgUTfCNDLvZtfYhyYk+E8ApuDCJl4YmnemesKz3qS//oFmATeRWQ+Q2Xh44m/Q0mLAmMdDAtgH9H/OBsLYzlzXPpYYZqCPnIQagED8xABiUyo4zs3cnUy2yGH8i3Tg==",
+      "hash": "453cae61e02388ff6a62d4ef79fdae2411e28acf355592505c1e9e10d8c77b8e",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T18:13:56.421Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Guía Completa: Jengibre\",\"planta\":\"Jengibre\",\"nombreCientifico\":\"Zingiber officinale\",\"fechaGeneracion\":\"2025-10-28T18:13:56.415Z\",\"contenidoHash\":\"0a7bf5ca4a194ccbe42188f64a414f6972a5cf65c1fe09d2bee001547904050d\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"digestiva\"}",
+    "signature": "x3t79f4TMZJit0xrhVrR5lYW9KEOXBSb2WlZZeeRS9ZEWoPFOIlZpt6JHJXaHDYpwwJs3+Bsh6/xrw9VgQsdINpYMUPavfDeB/QoDwbJuJqhaaKplMuD+jvb5NotRgEFkc8qhB31o8H5qrLhPPBZTtdaHEy1/YwAJFCthxdDcgNXwkzQ7KFjDdaNMs3m3YFUAX/DhBaROYRtlb9EqKOnG7m3RgUTfCNDLvZtfYhyYk+E8ApuDCJl4YmnemesKz3qS//oFmATeRWQ+Q2Xh44m/Q0mLAmMdDAtgH9H/OBsLYzlzXPpYYZqCPnIQagED8xABiUyo4zs3cnUy2yGH8i3Tg==",
+    "hash": "453cae61e02388ff6a62d4ef79fdae2411e28acf355592505c1e9e10d8c77b8e",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T18:13:56.421Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T18:13:56.422Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API para verificar la autenticidad",
+    "tipoDocumento": "Guía de Planta Medicinal"
+  }
+}

@@ -10,6 +10,7 @@ import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import PanelCifrado from './components/PanelCifrado';
+import ForgotPassword from './pages/ForgotPassword';
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path="/enfermedades" element={<Enfermedades />} />
               <Route path="/contacto" element={<div className="page-placeholder"><h2>Página de Contacto</h2><p>En desarrollo...</p></div>} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} /> {/* añadida */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />

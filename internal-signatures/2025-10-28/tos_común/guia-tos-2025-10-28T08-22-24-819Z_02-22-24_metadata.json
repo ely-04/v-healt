@@ -1,0 +1,32 @@
+{
+  "document": {
+    "title": "Guía Natural para Aliviar la Tos",
+    "type": "Tos común",
+    "fileName": "guia-tos-2025-10-28T08-22-24-819Z",
+    "generatedAt": "2025-10-28T08:22:24.824Z",
+    "contentSummary": {
+      "totalPlants": 3,
+      "totalRecommendations": 4
+    }
+  },
+  "signature": {
+    "authority": "V-Health Sistema de Medicina Natural",
+    "algorithm": "RSA-SHA256",
+    "signedAt": "2025-10-28T08:22:24.921Z",
+    "hash": "d6e96503ee2a43585325f285b156c8a6...",
+    "valid": true
+  },
+  "storage": {
+    "internalId": "VHEALTH_1761639744936_mea7pxg",
+    "category": "medical_document",
+    "classification": "signed_pdf_guide",
+    "accessLevel": "internal",
+    "retention": "7_years"
+  },
+  "audit": {
+    "createdBy": "system",
+    "createdAt": "2025-10-28T08:22:24.936Z",
+    "lastVerified": "2025-10-28T08:22:24.936Z",
+    "verificationCount": 0
+  }
+}

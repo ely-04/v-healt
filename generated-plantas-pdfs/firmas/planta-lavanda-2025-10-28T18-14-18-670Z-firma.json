@@ -1,0 +1,39 @@
+{
+  "pdfInfo": {
+    "titulo": "Guía Completa: Lavanda",
+    "planta": "Lavanda",
+    "nombreCientifico": "Lavandula angustifolia",
+    "fileName": "planta-lavanda-2025-10-28T18-14-18-670Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-plantas-pdfs\\planta-lavanda-2025-10-28T18-14-18-670Z.html",
+    "fechaGeneracion": "2025-10-28T18:14:18.677Z",
+    "contenido": {
+      "propiedades": 3,
+      "usos": 4,
+      "categoria": "relajante"
+    },
+    "hash": "00857bc63c754da9dde094b0c319ce6b38448bc8d4006c91ae851e18fb972ec4",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Guía Completa: Lavanda\",\"planta\":\"Lavanda\",\"nombreCientifico\":\"Lavandula angustifolia\",\"fechaGeneracion\":\"2025-10-28T18:14:18.677Z\",\"contenidoHash\":\"00857bc63c754da9dde094b0c319ce6b38448bc8d4006c91ae851e18fb972ec4\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"relajante\"}",
+      "signature": "h4LtkwNRXhnMWyQNIUQwawTcyoINCiP5t5c+2gPCov1N9OGJ9wbp82PRyMmBytPNOl4FPLYVquCZwSMQGJRyAyKlH58L/P8DNaXZf3MPY6WJxaQSfvGYQOBYC0O8lWfuz7L9FNTTUrNWarFkEFdjQ0xcO8PYBiLVcXq0X+kISVZtaZMDcGwQ0+scwSDq4QYLAOoXuI2l9HID4Et3r5CajT2c7TIjMpmg/x3m7E3FJjGdL+Gsuu/kct7ZY8783dHjjjyuJOJiUUUFQ7SR/jOd/aDA2CfQhkle5mR56aEIlZz5Lfr3MHfqeCyFsqcL+0JDqqBUwHha8BJ3fEBIp0iAGA==",
+      "hash": "51d4d57448bd44cb970e7d3c7254961130b8970a356a12f073a3d7a1b73e3cc2",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T18:14:18.691Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Guía Completa: Lavanda\",\"planta\":\"Lavanda\",\"nombreCientifico\":\"Lavandula angustifolia\",\"fechaGeneracion\":\"2025-10-28T18:14:18.677Z\",\"contenidoHash\":\"00857bc63c754da9dde094b0c319ce6b38448bc8d4006c91ae851e18fb972ec4\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"relajante\"}",
+    "signature": "h4LtkwNRXhnMWyQNIUQwawTcyoINCiP5t5c+2gPCov1N9OGJ9wbp82PRyMmBytPNOl4FPLYVquCZwSMQGJRyAyKlH58L/P8DNaXZf3MPY6WJxaQSfvGYQOBYC0O8lWfuz7L9FNTTUrNWarFkEFdjQ0xcO8PYBiLVcXq0X+kISVZtaZMDcGwQ0+scwSDq4QYLAOoXuI2l9HID4Et3r5CajT2c7TIjMpmg/x3m7E3FJjGdL+Gsuu/kct7ZY8783dHjjjyuJOJiUUUFQ7SR/jOd/aDA2CfQhkle5mR56aEIlZz5Lfr3MHfqeCyFsqcL+0JDqqBUwHha8BJ3fEBIp0iAGA==",
+    "hash": "51d4d57448bd44cb970e7d3c7254961130b8970a356a12f073a3d7a1b73e3cc2",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T18:14:18.691Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T18:14:18.691Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API para verificar la autenticidad",
+    "tipoDocumento": "Guía de Planta Medicinal"
+  }
+}

@@ -20,7 +20,6 @@ const Header = () => {
       <div className="container flex items-center justify-between py-3 px-6">
         <div className="logo flex items-center gap-2">
           <h1 className="text-3xl font-extrabold text-[#2d5a27] font-serif tracking-tight">V-HEALT</h1>
-          <span className="leaf">🌿</span>
         </div>
         <nav className="nav flex gap-6 items-center">
           <Link to="/" className="nav-link text-[#c4a484] font-semibold hover:text-[#2d5a27] transition-colors duration-200">HOME</Link>
@@ -33,7 +32,7 @@ const Header = () => {
               <Link to="/dashboard" className="nav-link text-[#c4a484] font-semibold hover:text-[#2d5a27] transition-colors duration-200">
                 DASHBOARD
               </Link>
-              <span className="text-sm text-gray-600">Hola, {user?.name}</span>
+              <span className="text-sm text-gray-600">Hola, {user?.fullName}</span>
               <button
                 onClick={handleLogout}
                 className="px-3 py-1 rounded text-sm font-medium transition-colors duration-200"

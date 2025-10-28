@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import VHealthCaptcha from '../VHealthCaptcha';
 
 const LoginForm = ({ onToggle }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -43,12 +45,15 @@ const LoginForm = ({ onToggle }) => {
     setCaptchaValid(isValid);
   };
 
+  // NUEVA FUNCIÓN: navegar a recuperar contraseña
+  const handleForgotPassword = () => {
+    if (clearError) clearError();
+    navigate('/forgot-password');
+  };
+
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg p-8" style={{ boxShadow: '0 4px 8px rgba(241, 228, 190, 0.3)' }}>
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center mb-4">
-          <span className="text-4xl">🌿</span>
-        </div>
         <h2 className="text-2xl font-bold" style={{ color: '#2d5a27' }}>Iniciar Sesión</h2>
         <p className="text-gray-600 mt-2">Accede a tu cuenta de V-Health</p>
       </div>
@@ -75,6 +80,9 @@ const LoginForm = ({ onToggle }) => {
             style={{ 
               focusRingColor: '#97b892',
               '--tw-ring-color': '#97b892',
+              backgroundColor: '#ffffff',
+              color: '#1f2937',
+              fontSize: '16px'
             }}
             placeholder="tu@email.com"
           />
@@ -96,6 +104,9 @@ const LoginForm = ({ onToggle }) => {
               style={{ 
                 focusRingColor: '#97b892',
                 '--tw-ring-color': '#97b892',
+                backgroundColor: '#ffffff',
+                color: '#1f2937',
+                fontSize: '16px'
               }}
               placeholder="Tu contraseña"
             />
@@ -148,6 +159,20 @@ const LoginForm = ({ onToggle }) => {
             'Iniciar Sesión'
           )}
         </button>
+
+        {/* Botón para recuperar contraseña */}
+        <div className="mt-3 text-center">
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="text-sm font-medium"
+            style={{ color: '#2d5a27' }}
+            onMouseEnter={(e) => e.target.style.color = '#97b892'}
+            onMouseLeave={(e) => e.target.style.color = '#2d5a27'}
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
       </form>
 
       <div className="mt-6 text-center">

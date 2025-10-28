@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   // API Base URL
-  const API_BASE_URL = 'http://localhost:3001/api';
+  const API_BASE_URL = 'http://localhost:3000/api';
 
   // Función para hacer peticiones HTTP
   const apiRequest = async (url, options = {}) => {
@@ -144,23 +144,30 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
 
     try {
-      const data = await apiRequest('/auth/register', {
+      // Registrar usuario
+      const registerData = await apiRequest('/auth/register', {
         method: 'POST',
         body: JSON.stringify({ name, email, password })
       });
 
+      // Después del registro exitoso, hacer login automático
+      const loginData = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
+
       // Guardar token en localStorage
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', loginData.token);
 
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
         payload: {
-          user: data.user || (data.data && data.data.user),
-          token: data.token
+          user: loginData.user,
+          token: loginData.token
         }
       });
 
-      return data;
+      return { ...registerData, user: loginData.user, token: loginData.token };
     } catch (error) {
       dispatch({
         type: AUTH_ACTIONS.LOGIN_FAILURE,

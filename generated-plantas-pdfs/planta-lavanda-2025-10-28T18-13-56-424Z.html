@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa: Lavanda</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2d5a27;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f8fdf8;
+        }
+        .header {
+            background: linear-gradient(135deg, #97b892, #2d5a27);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin: 5px 0;
+        }
+        .header .scientific-name {
+            font-style: italic;
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        .section {
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #97b892;
+        }
+        .section h2 {
+            color: #2d5a27;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid #e8f5e8;
+            padding-bottom: 10px;
+        }
+        .propiedades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .propiedad-item {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #c4e6c1;
+        }
+        .propiedad-item .emoji {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .usos-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .uso-item {
+            background: #f0f8f0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        .uso-item h4 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+        .preparacion-box {
+            background: #fff3e0;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #ffb74d;
+            margin: 20px 0;
+        }
+        .preparacion-box h3 {
+            color: #f57c00;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        .precauciones-box {
+            background: #ffebee;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #ef5350;
+            margin: 20px 0;
+        }
+        .precauciones-box h3 {
+            color: #c62828;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        .categoria-badge {
+            background: #97b892;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            color: #555;
+        }
+        .footer .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d5a27;
+            margin-bottom: 5px;
+        }
+        .metadata {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        @media print {
+            body { background-color: white; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌿 Lavanda</h1>
+        <div class="subtitle">Guía Completa de Plantas Medicinales</div>
+        <div class="scientific-name">Lavandula angustifolia</div>
+        <div class="categoria-badge">relajante</div>
+    </div>
+
+    <div class="section">
+        <h2>🌟 Propiedades Medicinales</h2>
+        <div class="propiedades-grid">
+            
+                <div class="propiedad-item">
+                    <span class="emoji">🌱</span>
+                    <strong>Relajante</strong>
+                </div>
+            
+                <div class="propiedad-item">
+                    <span class="emoji">🌱</span>
+                    <strong>Antiséptica</strong>
+                </div>
+            
+                <div class="propiedad-item">
+                    <span class="emoji">🌱</span>
+                    <strong>Cicatrizante</strong>
+                </div>
+            
+        </div>
+        
+    </div>
+
+    <div class="section">
+        <h2>💊 Usos Medicinales Principales</h2>
+        <div class="usos-list">
+            
+                <div class="uso-item">
+                    <h4>🎯 Insomnio</h4>
+                    <p>Aplicación terapéutica tradicional y respaldada por estudios.</p>
+                </div>
+            
+                <div class="uso-item">
+                    <h4>🎯 Ansiedad</h4>
+                    <p>Aplicación terapéutica tradicional y respaldada por estudios.</p>
+                </div>
+            
+                <div class="uso-item">
+                    <h4>🎯 Heridas menores</h4>
+                    <p>Aplicación terapéutica tradicional y respaldada por estudios.</p>
+                </div>
+            
+                <div class="uso-item">
+                    <h4>🎯 Dolores de cabeza</h4>
+                    <p>Aplicación terapéutica tradicional y respaldada por estudios.</p>
+                </div>
+            
+        </div>
+        
+    </div>
+
+    <div class="section">
+        <div class="preparacion-box">
+            <h3>📝 Preparación y Uso</h3>
+            <p>Infusión: 1 cucharadita de flores secas por taza. Aromaterapia: difusor.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="precauciones-box">
+            <h3>⚠️ Precauciones Importantes</h3>
+            <p>Puede causar somnolencia. No usar antes de conducir.</p>
+            <br>
+            <p><strong>Advertencia general:</strong> Esta información es únicamente educativa y no sustituye el consejo médico profesional. Siempre consulte con un médico antes de usar plantas medicinales, especialmente si está embarazada, amamantando, o tomando medicamentos.</p>
+        </div>
+    </div>
+
+    <div class="metadata">
+        <strong>Información del documento:</strong><br>
+        📅 Fecha de generación: 28 de octubre de 2025<br>
+        🏥 Fuente: V-Health - Sistema de Medicina Natural<br>
+        📋 Categoría: relajante<br>
+        🔍 ID de planta: 3
+    </div>
+
+    <div class="footer">
+        <div class="logo">V-Health</div>
+        <p>Sistema de Información de Plantas Medicinales</p>
+        <p style="font-size: 0.8em;">Documento generado automáticamente • 28 de octubre de 2025</p>
+    </div>
+</body>
+</html>

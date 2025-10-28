@@ -37,9 +37,6 @@ const Auth = () => {
       <div className="max-w-md w-full space-y-8">
         {/* Logo y título principal */}
         <div className="text-center">
-          <div className="mx-auto mb-4">
-            <span className="text-6xl">🌿</span>
-          </div>
           <h1 className="text-4xl font-bold mb-2" style={{ 
             fontFamily: "'Dancing Script', cursive", 
             color: '#222',

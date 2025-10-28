@@ -1,0 +1,23 @@
+{
+  "signatureInfo": {
+    "documentId": "guia-tos-2025-10-28T08-22-24-819Z",
+    "documentTitle": "Guía Natural para Aliviar la Tos",
+    "documentType": "Tos común",
+    "signatureHash": "d6e96503ee2a43585325f285b156c8a634c954aafad74d88f39319ecf90171da",
+    "signatureValue": "MOO0rQd2Lmwd1YC7YhKWxIa+hD3C5PfKyKglUnDkfgKdj3cSm9etDJo7E2sinbsboX7Wj/SsRdi1gDtkgLvpYMAGjfc1XDzoZXVK+xFj11902OvYsUjnM8msOkgDShp0egD62Hg0NXS0m2zHwtkDY+8FolW9XoRZQiV0m7fT0r9qVpyDVh5UmNi5Ap8siV0ky6gIA2Wi3iUv5CTo77vWlXsEIExowZtuckdY1KSVoi76utCWYDPxZNaqfzFyFQhdiZy4mpsLljCm3Cc2esomRVYsstetHOlMu/vss4AmFIZlvhapSfzv51UlkMwbsv6kTv0+KGElTatiutszilzGCg==",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T08:22:24.921Z"
+  },
+  "storageInfo": {
+    "internalId": "VHEALTH_1761639744936_mea7pxg",
+    "storedAt": "2025-10-28T08:22:24.936Z",
+    "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\tos_común\\guia-tos-2025-10-28T08-22-24-819Z_02-22-24_signature.json",
+    "category": "medical_guide_signature",
+    "status": "active"
+  },
+  "verification": {
+    "contentHash": "b3b61ac3d017cada65b785cd673d42143218822c80ada064f24fe2b099ce8c46",
+    "originalPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-tos-2025-10-28T08-22-24-819Z.html",
+    "signaturePath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-tos-2025-10-28T08-22-24-819Z-firma.json"
+  }
+}

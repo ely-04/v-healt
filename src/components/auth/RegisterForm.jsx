@@ -105,9 +105,6 @@ const RegisterForm = ({ onToggle }) => {
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg p-8" style={{ boxShadow: '0 4px 8px rgba(241, 228, 190, 0.3)' }}>
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center mb-4">
-          <span className="text-4xl">🌿</span>
-        </div>
         <h2 className="text-2xl font-bold" style={{ color: '#2d5a27' }}>Crear Cuenta</h2>
         <p className="text-gray-600 mt-2">Únete a la comunidad V-Health</p>
       </div>
@@ -134,6 +131,9 @@ const RegisterForm = ({ onToggle }) => {
             style={{ 
               focusRingColor: '#97b892',
               '--tw-ring-color': '#97b892',
+              backgroundColor: '#ffffff',
+              color: '#1f2937',
+              fontSize: '16px'
             }}
             placeholder="Tu nombre completo"
           />
@@ -154,6 +154,9 @@ const RegisterForm = ({ onToggle }) => {
             style={{ 
               focusRingColor: '#97b892',
               '--tw-ring-color': '#97b892',
+              backgroundColor: '#ffffff',
+              color: '#1f2937',
+              fontSize: '16px'
             }}
             placeholder="tu@email.com"
           />
@@ -172,6 +175,11 @@ const RegisterForm = ({ onToggle }) => {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent pr-10"
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#1f2937',
+                fontSize: '16px'
+              }}
               placeholder="Mínimo 8 caracteres"
             />
             <button
@@ -228,6 +236,11 @@ const RegisterForm = ({ onToggle }) => {
                   ? 'border-red-300' 
                   : 'border-gray-300'
               }`}
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#1f2937',
+                fontSize: '16px'
+              }}
               placeholder="Confirma tu contraseña"
             />
             <button

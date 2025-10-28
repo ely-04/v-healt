@@ -1,0 +1,39 @@
+{
+  "pdfInfo": {
+    "titulo": "Guía Completa: Manzanilla",
+    "planta": "Manzanilla",
+    "nombreCientifico": "Matricaria chamomilla",
+    "fileName": "planta-manzanilla-2025-10-28T18-14-18-564Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-plantas-pdfs\\planta-manzanilla-2025-10-28T18-14-18-564Z.html",
+    "fechaGeneracion": "2025-10-28T18:14:18.599Z",
+    "contenido": {
+      "propiedades": 3,
+      "usos": 4,
+      "categoria": "digestiva"
+    },
+    "hash": "7a590a9d266409ecce7252f2057b8ee2c8910dd31fb4307fd737ef4a1d00cfe2",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Guía Completa: Manzanilla\",\"planta\":\"Manzanilla\",\"nombreCientifico\":\"Matricaria chamomilla\",\"fechaGeneracion\":\"2025-10-28T18:14:18.599Z\",\"contenidoHash\":\"7a590a9d266409ecce7252f2057b8ee2c8910dd31fb4307fd737ef4a1d00cfe2\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"digestiva\"}",
+      "signature": "WbYjwOJd7J/g0WoI60/42nNMYc4W+JnwWH59Ta7gmeFcOFek+GTynDeME0owzZ3CQ6T9lKyyip5kw+vwiFCn5zc3K1d4xsHcyzj4jDZnz+UUg69R5oayJQMSVUPf2s9vvxgzVUv9pChY9KJ1vsBYaDUft9GUfXfCnLgnc+UjHB1IvS2rSqJF3jxwYok4x8vX0QPRee3BoXlcpfKs5OvSvq41kLe48HmoqwA9gW/4l5aBPFsYPE6cIgqEtsfTrZfV/v7jIZGqXqPl/3/162t1h5a3nWF2DvMu8a4ac/gF4H5mtxzPoxY8IGfxD9K/gSjkUbE+0a/KkhYT9quMiBZnVw==",
+      "hash": "b7315c13f08f7c87c0940f99e1f978b5c5f08f2ade04386be18981a96223fd36",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T18:14:18.626Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Guía Completa: Manzanilla\",\"planta\":\"Manzanilla\",\"nombreCientifico\":\"Matricaria chamomilla\",\"fechaGeneracion\":\"2025-10-28T18:14:18.599Z\",\"contenidoHash\":\"7a590a9d266409ecce7252f2057b8ee2c8910dd31fb4307fd737ef4a1d00cfe2\",\"autoridad\":\"V-Health Sistema de Plantas Medicinales\",\"version\":\"1.0\",\"categoria\":\"digestiva\"}",
+    "signature": "WbYjwOJd7J/g0WoI60/42nNMYc4W+JnwWH59Ta7gmeFcOFek+GTynDeME0owzZ3CQ6T9lKyyip5kw+vwiFCn5zc3K1d4xsHcyzj4jDZnz+UUg69R5oayJQMSVUPf2s9vvxgzVUv9pChY9KJ1vsBYaDUft9GUfXfCnLgnc+UjHB1IvS2rSqJF3jxwYok4x8vX0QPRee3BoXlcpfKs5OvSvq41kLe48HmoqwA9gW/4l5aBPFsYPE6cIgqEtsfTrZfV/v7jIZGqXqPl/3/162t1h5a3nWF2DvMu8a4ac/gF4H5mtxzPoxY8IGfxD9K/gSjkUbE+0a/KkhYT9quMiBZnVw==",
+    "hash": "b7315c13f08f7c87c0940f99e1f978b5c5f08f2ade04386be18981a96223fd36",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T18:14:18.626Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T18:14:18.627Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API para verificar la autenticidad",
+    "tipoDocumento": "Guía de Planta Medicinal"
+  }
+}

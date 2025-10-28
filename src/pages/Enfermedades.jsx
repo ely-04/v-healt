@@ -213,7 +213,7 @@ const Enfermedades = () => {
                     </ul>
                   </div>
                   <div className="mb-2">
-                    <h4 className="font-semibold text-gray-700 mb-1">🌿 Plantas recomendadas:</h4>
+                    <h4 className="font-semibold text-gray-700 mb-1">Plantas recomendadas:</h4>
                     {enfermedad.plantasRecomendadas.map((planta, index) => (
                       <div key={index} className="mb-2">
                         <h5 className="font-semibold text-[#c4a484]">{planta.nombre}</h5>

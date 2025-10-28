@@ -1,0 +1,23 @@
+{
+  "signatureInfo": {
+    "documentId": "guia-indigestion-2025-10-28T08-22-25-965Z",
+    "documentTitle": "Plantas Medicinales para la Indigestión",
+    "documentType": "Indigestión o dispepsia",
+    "signatureHash": "0f34a2297534ffe895719c719a3bd6626782801ee334a6543a3213a37554acd7",
+    "signatureValue": "wK8leJKLMLrWKPGIlOa90tP0NIxp2tTtv+leE+v6J0lBjLMpr+WJg/xrl3j/TpVnmcn39M8Un1rZ98im4qfbqrnjW1KK8IkX9Oc4lKqy/aJcEjajJxGbji0dWP57s3GDVRnTAxX7J5WSU4zqjqw9/8cHIfHtvAOWNjLxOdR7CvN+ORXT2Y8LRK2xln9DDS+l3nrGsZgETeALXdO7zedbI7gHJQ21J0/N+pOvt2INoMtdVdfiEeASmiGcJXVJ1uiUI0AMrp2zTZfuEEq97z+hLP7ZXaLdXp/U7Q8EuOLi/3Y2mUgFb7zH28+qOsliapOFrSlp2iGNt5qfIrF6m6b+qw==",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T08:22:25.978Z"
+  },
+  "storageInfo": {
+    "internalId": "VHEALTH_1761639745990_fx7toq",
+    "storedAt": "2025-10-28T08:22:25.990Z",
+    "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\indigestión_o_dispepsia\\guia-indigestion-2025-10-28T08-22-25-965Z_02-22-25_signature.json",
+    "category": "medical_guide_signature",
+    "status": "active"
+  },
+  "verification": {
+    "contentHash": "40f444ce0ce53c7b5e5471fa1d1db921ae570785cdad64dc73987355ded91c6f",
+    "originalPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-indigestion-2025-10-28T08-22-25-965Z.html",
+    "signaturePath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-indigestion-2025-10-28T08-22-25-965Z-firma.json"
+  }
+}
