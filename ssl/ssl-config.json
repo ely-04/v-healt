@@ -1,0 +1,19 @@
+{
+  "generado": "2025-10-28T02:49:40.120Z",
+  "archivos": {
+    "clave_privada": "localhost-key.pem",
+    "certificado": "localhost-cert.pem"
+  },
+  "especificaciones": {
+    "protocolo": "TLS 1.2/1.3",
+    "cifrado": "AES-256-GCM",
+    "algoritmo_clave": "RSA-2048",
+    "validez": "365 días",
+    "dominio": "localhost"
+  },
+  "seguridad": {
+    "perfect_forward_secrecy": true,
+    "hsts_enabled": true,
+    "secure_ciphers_only": true
+  }
+}

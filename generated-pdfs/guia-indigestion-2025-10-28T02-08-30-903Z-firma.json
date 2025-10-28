@@ -1,0 +1,36 @@
+{
+  "pdfInfo": {
+    "titulo": "Plantas Medicinales para la Indigestión",
+    "enfermedad": "Indigestión o dispepsia",
+    "fileName": "guia-indigestion-2025-10-28T02-08-30-903Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-indigestion-2025-10-28T02-08-30-903Z.html",
+    "fechaGeneracion": "2025-10-28T02:08:30.905Z",
+    "contenido": {
+      "totalPlantas": 3,
+      "totalRecomendaciones": 4
+    },
+    "hash": "ad5d22e00e44deae7139b82f3c10d6f6aa0395bf4f8389a29c7865039eb15ada",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Plantas Medicinales para la Indigestión\",\"enfermedad\":\"Indigestión o dispepsia\",\"fechaGeneracion\":\"2025-10-28T02:08:30.905Z\",\"contenidoHash\":\"ad5d22e00e44deae7139b82f3c10d6f6aa0395bf4f8389a29c7865039eb15ada\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+      "signature": "ppJndZHuPXt7QgaQVSmDcs0mNsBvTUdhAZjt92Whe1XfdpAwHdKiiTak9Zk9K40K2LcBJKq12QhSFlU42StHTbkeMg5npx1a3hexWfJ11P39yDQuSQTBdn155c3wJZ+Bilg2IdKlkvHRyfHJsiy3dDutJFdeN47LmSyuOMHkFW8KVNUFT9dHInkUA0wMql0kAwdjVHYIApXVPRm/L2NsSi98KiDn6M2O0PughpYCISmPeOQfOyIQE4dF66Hy+tJrkfgMxY9I/wELPAhnpZT/k8KhmdLco4nU1rhd+t6CECZd5P7rb2wW1lYOWoIpnNPaeNkEdhxF2sYomjWGD6W3lQ==",
+      "hash": "90bab5f2baf5ec0878586347e49c747bb59371af44bbc0d8549f38bfa33038f2",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T02:08:30.914Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Plantas Medicinales para la Indigestión\",\"enfermedad\":\"Indigestión o dispepsia\",\"fechaGeneracion\":\"2025-10-28T02:08:30.905Z\",\"contenidoHash\":\"ad5d22e00e44deae7139b82f3c10d6f6aa0395bf4f8389a29c7865039eb15ada\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+    "signature": "ppJndZHuPXt7QgaQVSmDcs0mNsBvTUdhAZjt92Whe1XfdpAwHdKiiTak9Zk9K40K2LcBJKq12QhSFlU42StHTbkeMg5npx1a3hexWfJ11P39yDQuSQTBdn155c3wJZ+Bilg2IdKlkvHRyfHJsiy3dDutJFdeN47LmSyuOMHkFW8KVNUFT9dHInkUA0wMql0kAwdjVHYIApXVPRm/L2NsSi98KiDn6M2O0PughpYCISmPeOQfOyIQE4dF66Hy+tJrkfgMxY9I/wELPAhnpZT/k8KhmdLco4nU1rhd+t6CECZd5P7rb2wW1lYOWoIpnNPaeNkEdhxF2sYomjWGD6W3lQ==",
+    "hash": "90bab5f2baf5ec0878586347e49c747bb59371af44bbc0d8549f38bfa33038f2",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T02:08:30.914Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T02:08:30.914Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API /api/pdf/verify para verificar la autenticidad"
+  }
+}

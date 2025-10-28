@@ -1,0 +1,36 @@
+{
+  "pdfInfo": {
+    "titulo": "Guía Natural para Aliviar la Tos",
+    "enfermedad": "Tos común",
+    "fileName": "guia-tos-2025-10-28T02-04-57-426Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-tos-2025-10-28T02-04-57-426Z.html",
+    "fechaGeneracion": "2025-10-28T02:04:57.428Z",
+    "contenido": {
+      "totalPlantas": 3,
+      "totalRecomendaciones": 4
+    },
+    "hash": "862951405b1840774b069a686103b5efc90185a3ca88f834fb5b0ed0b1769559",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Guía Natural para Aliviar la Tos\",\"enfermedad\":\"Tos común\",\"fechaGeneracion\":\"2025-10-28T02:04:57.428Z\",\"contenidoHash\":\"862951405b1840774b069a686103b5efc90185a3ca88f834fb5b0ed0b1769559\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+      "signature": "Hg8vACK9yNAOgs8KMHdWhyMIq3dSWIuD8+6yb0iBBp0WR0m3HGTHcZM0dTLoLvUBLU9X2yCDBd//VLIvnUXaBDYzjhmagqA+Q1uzPduz3xfyoGDaOqlHAFJCWCG3QT5LvgKQjItNBMPWk1tF0gpJDut/K/UWUsoUHPLm+wL5AGdbzLoRILPoVw9os5c4z6JL9i/PrYegXu6vSYjG8fEAHGCmWPf9WedWpzA555tnLX9qped6ZmyZxfIgTzITcFcWAq61nDx+AJyFokrqP+H7bMwTFdh3YW6WRHPxRLfJyYkewXmhy+61akA+pP3kO17vh4aDNcPaabZr1njZu1Z0tg==",
+      "hash": "f1a2b2f36f65de03d0720a0ba90c289c51885af9101f71c3086bf2ff14ce0d21",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T02:04:57.458Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Guía Natural para Aliviar la Tos\",\"enfermedad\":\"Tos común\",\"fechaGeneracion\":\"2025-10-28T02:04:57.428Z\",\"contenidoHash\":\"862951405b1840774b069a686103b5efc90185a3ca88f834fb5b0ed0b1769559\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+    "signature": "Hg8vACK9yNAOgs8KMHdWhyMIq3dSWIuD8+6yb0iBBp0WR0m3HGTHcZM0dTLoLvUBLU9X2yCDBd//VLIvnUXaBDYzjhmagqA+Q1uzPduz3xfyoGDaOqlHAFJCWCG3QT5LvgKQjItNBMPWk1tF0gpJDut/K/UWUsoUHPLm+wL5AGdbzLoRILPoVw9os5c4z6JL9i/PrYegXu6vSYjG8fEAHGCmWPf9WedWpzA555tnLX9qped6ZmyZxfIgTzITcFcWAq61nDx+AJyFokrqP+H7bMwTFdh3YW6WRHPxRLfJyYkewXmhy+61akA+pP3kO17vh4aDNcPaabZr1njZu1Z0tg==",
+    "hash": "f1a2b2f36f65de03d0720a0ba90c289c51885af9101f71c3086bf2ff14ce0d21",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T02:04:57.458Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T02:04:57.458Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API /api/pdf/verify para verificar la autenticidad"
+  }
+}

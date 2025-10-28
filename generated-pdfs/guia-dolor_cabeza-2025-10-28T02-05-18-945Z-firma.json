@@ -1,0 +1,36 @@
+{
+  "pdfInfo": {
+    "titulo": "Alivio Natural para el Dolor de Cabeza",
+    "enfermedad": "Cefalea tensional",
+    "fileName": "guia-dolor_cabeza-2025-10-28T02-05-18-945Z",
+    "htmlPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-dolor_cabeza-2025-10-28T02-05-18-945Z.html",
+    "fechaGeneracion": "2025-10-28T02:05:18.949Z",
+    "contenido": {
+      "totalPlantas": 3,
+      "totalRecomendaciones": 4
+    },
+    "hash": "bfe24f05bafd0fd0ef62f638995c4609b290a3e6a858eccd9089785edc32583f",
+    "firmado": true,
+    "firma": {
+      "data": "{\"titulo\":\"Alivio Natural para el Dolor de Cabeza\",\"enfermedad\":\"Cefalea tensional\",\"fechaGeneracion\":\"2025-10-28T02:05:18.949Z\",\"contenidoHash\":\"bfe24f05bafd0fd0ef62f638995c4609b290a3e6a858eccd9089785edc32583f\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+      "signature": "vP6zsa/PAlI4knKa1tjxdFaRVlWOHKxMDVv41cOc/SGCF5teXZwuOXp5jXFIxekOQiWUen4DDEH3coK0Gh2Q8Akcsdry6ih98kY4wQZP9UiwN6K3vjRs2NO7N7XPBsUYhPtBfSdQ7tilx7yRN7IPUNBWYg4Da9/ClSV0FlCKty99vhoXgf5lu2MyIQROdGw320gVfatmgFbYYMOTMeuaMU718DcaFZUd4T2jtNf2X7ufwdwTLaKedNu1kgcBK/6Ea5+gkcxy/YA2fKk9G9hwwAthJ99LBxzQ1DDh14a7JTMCtwx9WLApWcHVTb/+tCuPwGN9cv+RxLz0v6uGvZzwog==",
+      "hash": "07d4155987b907c72c0d1b908fbedc6da8a904bafa7f533f58bfffd815540a47",
+      "algorithm": "RSA-SHA256",
+      "timestamp": "2025-10-28T02:05:18.958Z"
+    }
+  },
+  "firma": {
+    "data": "{\"titulo\":\"Alivio Natural para el Dolor de Cabeza\",\"enfermedad\":\"Cefalea tensional\",\"fechaGeneracion\":\"2025-10-28T02:05:18.949Z\",\"contenidoHash\":\"bfe24f05bafd0fd0ef62f638995c4609b290a3e6a858eccd9089785edc32583f\",\"autoridad\":\"V-Health Sistema de Medicina Natural\",\"version\":\"1.0\"}",
+    "signature": "vP6zsa/PAlI4knKa1tjxdFaRVlWOHKxMDVv41cOc/SGCF5teXZwuOXp5jXFIxekOQiWUen4DDEH3coK0Gh2Q8Akcsdry6ih98kY4wQZP9UiwN6K3vjRs2NO7N7XPBsUYhPtBfSdQ7tilx7yRN7IPUNBWYg4Da9/ClSV0FlCKty99vhoXgf5lu2MyIQROdGw320gVfatmgFbYYMOTMeuaMU718DcaFZUd4T2jtNf2X7ufwdwTLaKedNu1kgcBK/6Ea5+gkcxy/YA2fKk9G9hwwAthJ99LBxzQ1DDh14a7JTMCtwx9WLApWcHVTb/+tCuPwGN9cv+RxLz0v6uGvZzwog==",
+    "hash": "07d4155987b907c72c0d1b908fbedc6da8a904bafa7f533f58bfffd815540a47",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T02:05:18.958Z"
+  },
+  "certificacion": {
+    "autoridad": "V-Health",
+    "algoritmo": "RSA-SHA256",
+    "fechaFirma": "2025-10-28T02:05:18.958Z",
+    "validez": "Este documento ha sido firmado digitalmente por V-Health",
+    "verificacion": "Use la API /api/pdf/verify para verificar la autenticidad"
+  }
+}

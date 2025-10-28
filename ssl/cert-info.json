@@ -1,0 +1,14 @@
+{
+  "generado": "2025-10-28T02:43:13.534Z",
+  "tipo": "Certificado autofirmado para desarrollo",
+  "validez": "365 días",
+  "algoritmo": "RSA-2048",
+  "dominio": "localhost",
+  "uso": "HTTPS/TLS para V-Health",
+  "especificaciones": {
+    "protocolo": "TLS 1.3",
+    "cifrado": "AES-256-GCM",
+    "hash": "SHA-256"
+  },
+  "advertencia": "Solo para desarrollo. Certificado autofirmado."
+}
