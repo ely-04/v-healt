@@ -1,0 +1,23 @@
+{
+  "signatureInfo": {
+    "documentId": "guia-dolor_cabeza-2025-10-28T08-22-27-021Z",
+    "documentTitle": "Alivio Natural para el Dolor de Cabeza",
+    "documentType": "Cefalea tensional",
+    "signatureHash": "6bcf61bc45186252f73855e773dbadfa9b5b02bf60940e02b463ba3960ec0e87",
+    "signatureValue": "gFcaRSLoUzm1QVTxTgfLogyF0aFOVBOUgg44edKY3l6LKfBwp7eYWN2vtjVizoYEDlEGpiBPE4JH0aVZOFp/2t7FSStsUYgE5I/sC3FrLsRXLgLPQD5aap2aPEgRudBZl6Eogs96mWOSOGHEl3kc7wbb/HvK2kzl/1XxxzDOEIAJwU6FKSs6Tky8t8KX7N/WXjySKSoIg0a6Zo2SbKPyOvlYDUz32P+ARb4H5ZEb16+iYWWJ5f2I4gffWUsx7jK00opzBzQ1YcEaVvYMS/BUSM0gt2biRpI89HJdIRm1qkvuEtFjoDznFHbZKc3baMADgKMbuz4A00vsQLp4ms1VVQ==",
+    "algorithm": "RSA-SHA256",
+    "timestamp": "2025-10-28T08:22:27.036Z"
+  },
+  "storageInfo": {
+    "internalId": "VHEALTH_1761639747042_akkyle",
+    "storedAt": "2025-10-28T08:22:27.042Z",
+    "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\cefalea_tensional\\guia-dolor_cabeza-2025-10-28T08-22-27-021Z_02-22-27_signature.json",
+    "category": "medical_guide_signature",
+    "status": "active"
+  },
+  "verification": {
+    "contentHash": "83e5027b06f4934d4433a322530fc91c22364dd423ab21f17b96bb59b782c8b6",
+    "originalPath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-dolor_cabeza-2025-10-28T08-22-27-021Z.html",
+    "signaturePath": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\generated-pdfs\\guia-dolor_cabeza-2025-10-28T08-22-27-021Z-firma.json"
+  }
+}

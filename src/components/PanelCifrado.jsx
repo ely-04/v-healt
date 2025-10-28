@@ -114,6 +114,11 @@ const PanelCifrado = () => {
                 : 'Pegar aquí el JSON del paquete cifrado completo'
               }
               className="w-full p-3 border border-gray-300 rounded-md h-32"
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#1f2937',
+                fontSize: '16px'
+              }}
             />
           </div>
 

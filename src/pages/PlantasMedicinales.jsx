@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 // Si usas Tailwind, elimina la importación de Plantas.css
 
 const PlantasMedicinales = () => {
   const [selectedCategory, setSelectedCategory] = useState('todas');
+  const [generandoPDF, setGenerandoPDF] = useState(null);
+  const { isAuthenticated } = useAuth();
 
   const plantas = [
     {
@@ -74,6 +77,72 @@ const PlantasMedicinales = () => {
     ? plantas 
     : plantas.filter(planta => planta.categoria === selectedCategory);
 
+  // Función para generar y descargar PDF firmado
+  const generarPDFFirmado = async (planta) => {
+    if (!isAuthenticated) {
+      alert('Debe iniciar sesión para generar PDFs firmados');
+      return;
+    }
+
+    setGenerandoPDF(planta.id);
+    
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Generar y firmar PDF automáticamente
+      const response = await fetch('/api/plantas-pdf/completo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          plantaData: {
+            ...planta,
+            emoji: planta.imagen // Guardar el emoji como imagen
+          }
+        })
+      });
+
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error HTTP:', response.status, response.statusText);
+        console.error('Respuesta del servidor:', errorText);
+        throw new Error(`Error del servidor (${response.status}): ${response.statusText}`);
+      }
+
+      // Verificar si el contenido es JSON válido
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const responseText = await response.text();
+        console.error('Respuesta no es JSON:', responseText);
+        throw new Error('El servidor no devolvió un JSON válido');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Abrir el PDF en una nueva pestaña
+        const pdfUrl = data.acciones.ver;
+        window.open(pdfUrl, '_blank');
+        
+        // Mostrar notificación de éxito
+        alert(`✅ PDF de ${planta.nombre} generado y firmado digitalmente.\n\n` +
+              `🔐 Algoritmo: ${data.seguridad.algoritmo}\n` +
+              `📅 Fecha: ${new Date(data.seguridad.fechaFirma).toLocaleString('es-ES')}\n` +
+              `🔗 Hash: ${data.seguridad.hash}`);
+      } else {
+        throw new Error(data.message || 'Error desconocido del servidor');
+      }
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      alert(`❌ Error generando PDF: ${error.message}`);
+    } finally {
+      setGenerandoPDF(null);
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen">
       <header className="pt-12 pb-4 text-center">
@@ -124,8 +193,45 @@ const PlantasMedicinales = () => {
                 <p className="text-gray-600 text-sm">{planta.preparacion}</p>
               </div>
               <div className="w-full">
-                <h4 className="font-semibold text-red-600 mb-1"> Precauciones:</h4>
+                <h4 className="font-semibold text-red-600 mb-1">⚠️ Precauciones:</h4>
                 <p className="text-gray-600 text-sm">{planta.precauciones}</p>
+              </div>
+              
+              {/* Botón para generar PDF firmado */}
+              <div className="w-full mt-4 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => generarPDFFirmado(planta)}
+                  disabled={generandoPDF === planta.id}
+                  className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    isAuthenticated 
+                      ? generandoPDF === planta.id
+                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                        : 'bg-[#2d5a27] text-white hover:bg-[#1f3d1b] shadow-md hover:shadow-lg'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  title={isAuthenticated ? 'Generar PDF firmado digitalmente' : 'Inicie sesión para generar PDFs'}
+                >
+                  {generandoPDF === planta.id ? (
+                    <>
+                      <span className="inline-block animate-spin mr-2">⏳</span>
+                      Generando PDF...
+                    </>
+                  ) : (
+                    <>
+                      📄 Descargar PDF Firmado
+                    </>
+                  )}
+                </button>
+                {isAuthenticated && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    🔐 PDF firmado digitalmente con RSA-SHA256
+                  </p>
+                )}
+                {!isAuthenticated && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Inicie sesión para generar PDFs firmados
+                  </p>
+                )}
               </div>
             </div>
           ))}

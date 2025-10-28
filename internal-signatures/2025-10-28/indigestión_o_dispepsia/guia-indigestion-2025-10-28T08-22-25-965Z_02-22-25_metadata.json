@@ -1,0 +1,32 @@
+{
+  "document": {
+    "title": "Plantas Medicinales para la Indigestión",
+    "type": "Indigestión o dispepsia",
+    "fileName": "guia-indigestion-2025-10-28T08-22-25-965Z",
+    "generatedAt": "2025-10-28T08:22:25.970Z",
+    "contentSummary": {
+      "totalPlants": 3,
+      "totalRecommendations": 4
+    }
+  },
+  "signature": {
+    "authority": "V-Health Sistema de Medicina Natural",
+    "algorithm": "RSA-SHA256",
+    "signedAt": "2025-10-28T08:22:25.978Z",
+    "hash": "0f34a2297534ffe895719c719a3bd662...",
+    "valid": true
+  },
+  "storage": {
+    "internalId": "VHEALTH_1761639745990_fx7toq",
+    "category": "medical_document",
+    "classification": "signed_pdf_guide",
+    "accessLevel": "internal",
+    "retention": "7_years"
+  },
+  "audit": {
+    "createdBy": "system",
+    "createdAt": "2025-10-28T08:22:25.990Z",
+    "lastVerified": "2025-10-28T08:22:25.990Z",
+    "verificationCount": 0
+  }
+}

@@ -138,12 +138,41 @@ const guiasPlantas = {
 class GeneradorGuiasPDF {
   constructor() {
     this.basePath = path.join(process.cwd(), 'generated-pdfs');
+    this.signaturesPath = path.join(process.cwd(), 'internal-signatures');
+    this.archivePath = path.join(process.cwd(), 'document-archive');
     this.ensureDirectoryExists();
   }
 
   ensureDirectoryExists() {
+    // Crear directorio principal de PDFs
     if (!fs.existsSync(this.basePath)) {
       fs.mkdirSync(this.basePath, { recursive: true });
+    }
+
+    // Crear directorio interno de firmas digitales
+    if (!fs.existsSync(this.signaturesPath)) {
+      fs.mkdirSync(this.signaturesPath, { recursive: true });
+    }
+
+    // Crear subdirectorios organizados por fecha
+    const today = new Date().toISOString().split('T')[0];
+    const todaySignaturePath = path.join(this.signaturesPath, today);
+    if (!fs.existsSync(todaySignaturePath)) {
+      fs.mkdirSync(todaySignaturePath, { recursive: true });
+    }
+
+    // Crear directorio de archivo general
+    if (!fs.existsSync(this.archivePath)) {
+      fs.mkdirSync(this.archivePath, { recursive: true });
+      
+      // Crear subdirectorios del archivo
+      const subDirs = ['signatures', 'documents', 'certificates', 'logs'];
+      subDirs.forEach(dir => {
+        const subPath = path.join(this.archivePath, dir);
+        if (!fs.existsSync(subPath)) {
+          fs.mkdirSync(subPath, { recursive: true });
+        }
+      });
     }
   }
 
@@ -404,9 +433,9 @@ class GeneradorGuiasPDF {
       pdfInfo.firmado = true;
       pdfInfo.firma = firma;
 
-      // Guardar información de la firma
+      // Guardar información de la firma (ubicación original para compatibilidad)
       const firmaPath = path.join(this.basePath, `${pdfInfo.fileName}-firma.json`);
-      fs.writeFileSync(firmaPath, JSON.stringify({
+      const firmaData = {
         pdfInfo: pdfInfo,
         firma: firma,
         certificacion: {
@@ -416,11 +445,17 @@ class GeneradorGuiasPDF {
           validez: "Este documento ha sido firmado digitalmente por V-Health",
           verificacion: "Use la API /api/pdf/verify para verificar la autenticidad"
         }
-      }, null, 2), 'utf8');
+      };
+      
+      fs.writeFileSync(firmaPath, JSON.stringify(firmaData, null, 2), 'utf8');
+
+      // Guardar copia organizada en apartado interno
+      const internalStorage = this.guardarFirmaInterna(pdfInfo, firma, firmaData);
 
       console.log(`✍️ PDF firmado digitalmente: ${pdfInfo.titulo}`);
       console.log(`🔗 Hash del documento: ${pdfInfo.hash.substring(0, 32)}...`);
       console.log(`📁 Firma guardada en: ${firmaPath}`);
+      console.log(`🗄️ Copia interna en: ${internalStorage.internalPath}`);
 
       return {
         pdfInfo,
@@ -491,6 +526,290 @@ class GeneradorGuiasPDF {
         valido: false,
         razon: `Error en la verificación: ${error.message}`
       };
+    }
+  }
+
+  /**
+   * Guardar firma digital en apartado interno organizado
+   */
+  guardarFirmaInterna(pdfInfo, firma, firmaData) {
+    try {
+      const fechaActual = new Date();
+      const fechaString = fechaActual.toISOString().split('T')[0]; // YYYY-MM-DD
+      const horaString = fechaActual.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+      
+      // Crear estructura de directorios por fecha
+      const dailyPath = path.join(this.signaturesPath, fechaString);
+      if (!fs.existsSync(dailyPath)) {
+        fs.mkdirSync(dailyPath, { recursive: true });
+      }
+
+      // Crear subdirectorios por tipo de documento
+      const docTypePath = path.join(dailyPath, pdfInfo.enfermedad.replace(/\s+/g, '_').toLowerCase());
+      if (!fs.existsSync(docTypePath)) {
+        fs.mkdirSync(docTypePath, { recursive: true });
+      }
+
+      // Generar nombre de archivo interno con timestamp completo
+      const internalFileName = `${pdfInfo.fileName}_${horaString}`;
+      const internalSignaturePath = path.join(docTypePath, `${internalFileName}_signature.json`);
+      const internalMetadataPath = path.join(docTypePath, `${internalFileName}_metadata.json`);
+
+      // Datos de la firma para almacenamiento interno
+      const internalSignatureData = {
+        signatureInfo: {
+          documentId: pdfInfo.fileName,
+          documentTitle: pdfInfo.titulo,
+          documentType: pdfInfo.enfermedad,
+          signatureHash: firma.hash,
+          signatureValue: firma.signature,
+          algorithm: firma.algorithm,
+          timestamp: firma.timestamp
+        },
+        storageInfo: {
+          internalId: `VHEALTH_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+          storedAt: new Date().toISOString(),
+          location: internalSignaturePath,
+          category: 'medical_guide_signature',
+          status: 'active'
+        },
+        verification: {
+          contentHash: pdfInfo.hash,
+          originalPath: pdfInfo.htmlPath,
+          signaturePath: path.join(this.basePath, `${pdfInfo.fileName}-firma.json`)
+        }
+      };
+
+      // Metadatos adicionales para búsqueda y auditoría
+      const internalMetadata = {
+        document: {
+          title: pdfInfo.titulo,
+          type: pdfInfo.enfermedad,
+          fileName: pdfInfo.fileName,
+          generatedAt: pdfInfo.fechaGeneracion,
+          contentSummary: {
+            totalPlants: pdfInfo.contenido?.totalPlantas || 0,
+            totalRecommendations: pdfInfo.contenido?.totalRecomendaciones || 0
+          }
+        },
+        signature: {
+          authority: "V-Health Sistema de Medicina Natural",
+          algorithm: firma.algorithm,
+          signedAt: firma.timestamp,
+          hash: firma.hash.substring(0, 32) + '...',
+          valid: true
+        },
+        storage: {
+          internalId: internalSignatureData.storageInfo.internalId,
+          category: 'medical_document',
+          classification: 'signed_pdf_guide',
+          accessLevel: 'internal',
+          retention: '7_years'
+        },
+        audit: {
+          createdBy: 'system',
+          createdAt: new Date().toISOString(),
+          lastVerified: new Date().toISOString(),
+          verificationCount: 0
+        }
+      };
+
+      // Guardar archivos internos
+      fs.writeFileSync(internalSignaturePath, JSON.stringify(internalSignatureData, null, 2), 'utf8');
+      fs.writeFileSync(internalMetadataPath, JSON.stringify(internalMetadata, null, 2), 'utf8');
+
+      // Actualizar índice de firmas
+      this.actualizarIndiceFirmas(internalSignatureData, internalMetadata);
+
+      // Crear log de auditoría
+      this.crearLogAuditoria('SIGNATURE_STORED', {
+        documentId: pdfInfo.fileName,
+        internalId: internalSignatureData.storageInfo.internalId,
+        storagePath: internalSignaturePath
+      });
+
+      return {
+        success: true,
+        internalPath: internalSignaturePath,
+        metadataPath: internalMetadataPath,
+        internalId: internalSignatureData.storageInfo.internalId,
+        category: docTypePath
+      };
+
+    } catch (error) {
+      console.error('❌ Error guardando firma interna:', error.message);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Actualizar índice maestro de firmas digitales
+   */
+  actualizarIndiceFirmas(signatureData, metadata) {
+    try {
+      const indexPath = path.join(this.archivePath, 'signatures', 'master_index.json');
+      
+      let masterIndex = { signatures: [], lastUpdated: null, totalCount: 0 };
+      
+      // Leer índice existente si existe
+      if (fs.existsSync(indexPath)) {
+        masterIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+      }
+
+      // Agregar nueva entrada
+      const indexEntry = {
+        internalId: signatureData.storageInfo.internalId,
+        documentId: signatureData.signatureInfo.documentId,
+        documentTitle: signatureData.signatureInfo.documentTitle,
+        documentType: signatureData.signatureInfo.documentType,
+        signedAt: signatureData.signatureInfo.timestamp,
+        storedAt: signatureData.storageInfo.storedAt,
+        location: signatureData.storageInfo.location,
+        hash: signatureData.signatureInfo.signatureHash.substring(0, 32) + '...',
+        status: 'active'
+      };
+
+      masterIndex.signatures.push(indexEntry);
+      masterIndex.lastUpdated = new Date().toISOString();
+      masterIndex.totalCount = masterIndex.signatures.length;
+
+      // Guardar índice actualizado
+      fs.writeFileSync(indexPath, JSON.stringify(masterIndex, null, 2), 'utf8');
+
+      console.log(`📇 Índice maestro actualizado: ${masterIndex.totalCount} firmas registradas`);
+
+    } catch (error) {
+      console.error('❌ Error actualizando índice:', error.message);
+    }
+  }
+
+  /**
+   * Crear log de auditoría
+   */
+  crearLogAuditoria(action, details) {
+    try {
+      const logPath = path.join(this.archivePath, 'logs', 'audit.log');
+      const timestamp = new Date().toISOString();
+      
+      const logEntry = {
+        timestamp,
+        action,
+        details,
+        system: 'V-Health-SignatureManager',
+        version: '1.0'
+      };
+
+      const logLine = `${timestamp} [${action}] ${JSON.stringify(details)}\n`;
+      
+      // Append to log file
+      fs.appendFileSync(logPath, logLine, 'utf8');
+
+    } catch (error) {
+      console.error('❌ Error creando log de auditoría:', error.message);
+    }
+  }
+
+  /**
+   * Buscar firmas por criterios
+   */
+  buscarFirmasInternas(criterios = {}) {
+    try {
+      const indexPath = path.join(this.archivePath, 'signatures', 'master_index.json');
+      
+      if (!fs.existsSync(indexPath)) {
+        return { found: [], total: 0 };
+      }
+
+      const masterIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+      let resultados = masterIndex.signatures;
+
+      // Filtrar por tipo de documento
+      if (criterios.documentType) {
+        resultados = resultados.filter(sig => 
+          sig.documentType.toLowerCase().includes(criterios.documentType.toLowerCase())
+        );
+      }
+
+      // Filtrar por fecha
+      if (criterios.fechaDesde) {
+        resultados = resultados.filter(sig => 
+          new Date(sig.signedAt) >= new Date(criterios.fechaDesde)
+        );
+      }
+
+      if (criterios.fechaHasta) {
+        resultados = resultados.filter(sig => 
+          new Date(sig.signedAt) <= new Date(criterios.fechaHasta)
+        );
+      }
+
+      // Filtrar por estado
+      if (criterios.status) {
+        resultados = resultados.filter(sig => sig.status === criterios.status);
+      }
+
+      return {
+        found: resultados,
+        total: resultados.length,
+        criteria: criterios
+      };
+
+    } catch (error) {
+      console.error('❌ Error buscando firmas:', error.message);
+      return { found: [], total: 0, error: error.message };
+    }
+  }
+
+  /**
+   * Obtener estadísticas de firmas internas
+   */
+  obtenerEstadisticasFirmas() {
+    try {
+      const indexPath = path.join(this.archivePath, 'signatures', 'master_index.json');
+      
+      if (!fs.existsSync(indexPath)) {
+        return {
+          totalFirmas: 0,
+          ultimaFirma: null,
+          tiposDocumento: {},
+          porFecha: {}
+        };
+      }
+
+      const masterIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+      const signatures = masterIndex.signatures;
+
+      // Contar por tipo de documento
+      const tiposDocumento = {};
+      signatures.forEach(sig => {
+        tiposDocumento[sig.documentType] = (tiposDocumento[sig.documentType] || 0) + 1;
+      });
+
+      // Contar por fecha (solo día)
+      const porFecha = {};
+      signatures.forEach(sig => {
+        const fecha = sig.signedAt.split('T')[0];
+        porFecha[fecha] = (porFecha[fecha] || 0) + 1;
+      });
+
+      // Última firma
+      const ultimaFirma = signatures.length > 0 ? 
+        signatures.sort((a, b) => new Date(b.signedAt) - new Date(a.signedAt))[0] : null;
+
+      return {
+        totalFirmas: signatures.length,
+        ultimaFirma,
+        tiposDocumento,
+        porFecha,
+        actualizadoEn: masterIndex.lastUpdated
+      };
+
+    } catch (error) {
+      console.error('❌ Error obteniendo estadísticas:', error.message);
+      return { error: error.message };
     }
   }
 

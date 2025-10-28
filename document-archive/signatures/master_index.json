@@ -1,0 +1,39 @@
+{
+  "signatures": [
+    {
+      "internalId": "VHEALTH_1761639744936_mea7pxg",
+      "documentId": "guia-tos-2025-10-28T08-22-24-819Z",
+      "documentTitle": "Guía Natural para Aliviar la Tos",
+      "documentType": "Tos común",
+      "signedAt": "2025-10-28T08:22:24.921Z",
+      "storedAt": "2025-10-28T08:22:24.936Z",
+      "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\tos_común\\guia-tos-2025-10-28T08-22-24-819Z_02-22-24_signature.json",
+      "hash": "d6e96503ee2a43585325f285b156c8a6...",
+      "status": "active"
+    },
+    {
+      "internalId": "VHEALTH_1761639745990_fx7toq",
+      "documentId": "guia-indigestion-2025-10-28T08-22-25-965Z",
+      "documentTitle": "Plantas Medicinales para la Indigestión",
+      "documentType": "Indigestión o dispepsia",
+      "signedAt": "2025-10-28T08:22:25.978Z",
+      "storedAt": "2025-10-28T08:22:25.990Z",
+      "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\indigestión_o_dispepsia\\guia-indigestion-2025-10-28T08-22-25-965Z_02-22-25_signature.json",
+      "hash": "0f34a2297534ffe895719c719a3bd662...",
+      "status": "active"
+    },
+    {
+      "internalId": "VHEALTH_1761639747042_akkyle",
+      "documentId": "guia-dolor_cabeza-2025-10-28T08-22-27-021Z",
+      "documentTitle": "Alivio Natural para el Dolor de Cabeza",
+      "documentType": "Cefalea tensional",
+      "signedAt": "2025-10-28T08:22:27.036Z",
+      "storedAt": "2025-10-28T08:22:27.042Z",
+      "location": "C:\\Users\\Elizabeth\\Desktop\\V-Healt\\v-healt\\internal-signatures\\2025-10-28\\cefalea_tensional\\guia-dolor_cabeza-2025-10-28T08-22-27-021Z_02-22-27_signature.json",
+      "hash": "6bcf61bc45186252f73855e773dbadfa...",
+      "status": "active"
+    }
+  ],
+  "lastUpdated": "2025-10-28T08:22:27.047Z",
+  "totalCount": 3
+}
