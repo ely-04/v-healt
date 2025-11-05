@@ -1,4 +1,4 @@
-const http = require('http');
+import http from 'http';
 
 // Configuración
 const SERVER_URL = 'http://localhost:3000';
@@ -11,17 +11,13 @@ let consecutiveFailures = 0;
 async function checkServerHealth() {
   return new Promise((resolve) => {
     const startTime = Date.now();
-    
     const req = http.get(`${SERVER_URL}/api/health`, (res) => {
       let data = '';
-      
       res.on('data', (chunk) => {
         data += chunk;
       });
-      
       res.on('end', () => {
         const responseTime = Date.now() - startTime;
-        
         if (res.statusCode === 200) {
           try {
             const response = JSON.parse(data);
@@ -46,7 +42,6 @@ async function checkServerHealth() {
         }
       });
     });
-    
     req.on('error', (error) => {
       const responseTime = Date.now() - startTime;
       resolve({
@@ -55,7 +50,6 @@ async function checkServerHealth() {
         responseTime
       });
     });
-    
     req.setTimeout(10000, () => {
       req.destroy();
       resolve({

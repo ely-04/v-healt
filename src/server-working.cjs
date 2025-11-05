@@ -135,9 +135,10 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Ruta de registro
 app.post('/api/auth/register', async (req, res) => {
-  const { fullName, email, password, confirmPassword } = req.body;
+  const { fullName, name, email, password, confirmPassword } = req.body;
+  const userName = fullName || name; // Aceptar ambos
   
-  if (!fullName || !email || !password || !confirmPassword) {
+  if (!userName || !email || !password || !confirmPassword) {
     return res.status(400).json({
       success: false,
       message: 'Todos los campos son requeridos'
@@ -181,7 +182,7 @@ app.post('/api/auth/register', async (req, res) => {
     // Crear nuevo usuario
     const [result] = await connection.execute(
       'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)',
-      [email, hashedPassword, fullName, 'user']
+      [email, hashedPassword, userName, 'user']
     );
     
     await connection.end();
