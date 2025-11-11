@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
 
 // Cargar variables de entorno
 dotenv.config();
@@ -267,6 +268,119 @@ app.get('/api/auth/verify', async (req, res) => {
     res.status(401).json({
       success: false,
       message: 'Token inválido'
+    });
+  }
+});
+
+// Ruta para solicitar recuperación de contraseña
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email es requerido'
+    });
+  }
+
+  try {
+    const connection = await getConnection();
+    
+    // Buscar usuario en la base de datos
+    const [rows] = await connection.execute(
+      'SELECT id, email, name FROM users WHERE email = ?',
+      [email]
+    );
+    
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+    
+    const user = rows[0];
+
+    // Generar token de recuperación (válido por 1 hora)
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email 
+      },
+      process.env.JWT_SECRET || 'vhealth-secret-key',
+      { expiresIn: '1h' }
+    );
+    
+    // Configurar el transporte de correo
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    // Envía el correo
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Recuperación de contraseña',
+      html: `<p>Haz clic <a href="${resetLink}">aquí</a> para restablecer tu contraseña.</p>`
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Correo de recuperación enviado'
+    });
+    
+  } catch (error) {
+    console.error('Error en recuperación de contraseña:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Ruta para restablecer la contraseña
+app.post('/api/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  
+  if (!token || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Token y nueva contraseña son requeridos'
+    });
+  }
+
+  try {
+    // Verificar y decodificar el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'vhealth-secret-key');
+    
+    const connection = await getConnection();
+    
+    // Hashear la nueva contraseña
+    const hashedPassword = await bcrypt.hash(password, 12);
+    
+    // Actualizar la contraseña en la base de datos
+    await connection.execute(
+      'UPDATE users SET password = ? WHERE id = ?',
+      [hashedPassword, decoded.userId]
+    );
+    
+    await connection.end();
+
+    res.status(200).json({
+      success: true,
+      message: 'Contraseña actualizada exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('Error restableciendo contraseña:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
     });
   }
 });

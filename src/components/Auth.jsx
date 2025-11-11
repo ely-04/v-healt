@@ -47,14 +47,9 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <>
-              <Link to="/auth" className="nav-link text-[#c4a484] font-semibold hover:text-[#2d5a27] transition-colors duration-200">
-                INICIAR SESIÓN
-              </Link>
-              <Link to="/forgot-password" className="nav-link text-[#c4a484] font-semibold hover:text-[#2d5a27] transition-colors duration-200">
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </>
+            <Link to="/auth" className="nav-link text-[#c4a484] font-semibold hover:text-[#2d5a27] transition-colors duration-200">
+              INICIAR SESIÓN
+            </Link>
           )}
         </nav>
       </div>
