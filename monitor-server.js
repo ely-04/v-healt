@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const http = require('http');
+=======
+import http from 'http';
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
 
 // Configuración
 const SERVER_URL = 'http://localhost:3000';
@@ -11,6 +15,7 @@ let consecutiveFailures = 0;
 async function checkServerHealth() {
   return new Promise((resolve) => {
     const startTime = Date.now();
+<<<<<<< HEAD
     
     const req = http.get(`${SERVER_URL}/api/health`, (res) => {
       let data = '';
@@ -22,6 +27,15 @@ async function checkServerHealth() {
       res.on('end', () => {
         const responseTime = Date.now() - startTime;
         
+=======
+    const req = http.get(`${SERVER_URL}/api/health`, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        const responseTime = Date.now() - startTime;
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
         if (res.statusCode === 200) {
           try {
             const response = JSON.parse(data);
@@ -46,7 +60,10 @@ async function checkServerHealth() {
         }
       });
     });
+<<<<<<< HEAD
     
+=======
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
     req.on('error', (error) => {
       const responseTime = Date.now() - startTime;
       resolve({
@@ -55,7 +72,10 @@ async function checkServerHealth() {
         responseTime
       });
     });
+<<<<<<< HEAD
     
+=======
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
     req.setTimeout(10000, () => {
       req.destroy();
       resolve({

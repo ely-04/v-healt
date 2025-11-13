@@ -11,6 +11,7 @@ const RegisterForm = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [validationError, setValidationError] = useState('');
   const { register, isLoading, error, clearError } = useAuth();
 
   // Función para calcular la fuerza de la contraseña
@@ -79,23 +80,47 @@ const RegisterForm = ({ onToggle }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Limpiar errores previos
+    setValidationError('');
+    clearError();
+    
     // Validaciones del cliente
+    if (!formData.name.trim()) {
+      setValidationError('Por favor ingresa tu nombre completo');
+      return;
+    }
+    
+    if (!formData.email.trim()) {
+      setValidationError('Por favor ingresa tu email');
+      return;
+    }
+    
+    if (!formData.password) {
+      setValidationError('Por favor ingresa una contraseña');
+      return;
+    }
+    
+    if (!formData.confirmPassword) {
+      setValidationError('Por favor confirma tu contraseña');
+      return;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
-      clearError();
-      // Aquí podrías mostrar un error específico de confirmación de contraseña
+      setValidationError('Las contraseñas no coinciden');
       return;
     }
 
-    if (passwordStrength < 3) {
-      clearError();
-      // Aquí podrías mostrar un error de contraseña débil
+    if (formData.password.length < 8) {
+      setValidationError('La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
     try {
+      console.log('Intentando registrar:', formData.name, formData.email);
       await register(formData.name, formData.email, formData.password);
       // El redirect se maneja en el componente padre
     } catch (err) {
+      console.error('Error en registro:', err);
       // El error se maneja en el contexto
     }
   };
@@ -109,9 +134,9 @@ const RegisterForm = ({ onToggle }) => {
         <p className="text-gray-600 mt-2">Únete a la comunidad V-Health</p>
       </div>
 
-      {error && (
+      {(error || validationError) && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-          {error}
+          {validationError || error}
         </div>
       )}
 

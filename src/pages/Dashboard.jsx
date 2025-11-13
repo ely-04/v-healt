@@ -23,7 +23,11 @@ const Dashboard = () => {
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-2" style={{ color: '#2d5a27' }}>
+<<<<<<< HEAD
               ¡Bienvenido, {user?.fullName}!
+=======
+              ¡Bienvenido, {user?.name || user?.fullName}!
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
             </h1>
             <p className="text-gray-600">
               Te has autenticado exitosamente en V-Health

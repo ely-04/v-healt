@@ -4,7 +4,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
+<<<<<<< HEAD
 const nodemailer = require('nodemailer');
+=======
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
 
 // Cargar variables de entorno
 dotenv.config();
@@ -136,9 +139,16 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Ruta de registro
 app.post('/api/auth/register', async (req, res) => {
+<<<<<<< HEAD
   const { fullName, email, password, confirmPassword } = req.body;
   
   if (!fullName || !email || !password || !confirmPassword) {
+=======
+  const { fullName, name, email, password, confirmPassword } = req.body;
+  const userName = fullName || name; // Aceptar ambos
+  
+  if (!userName || !email || !password || !confirmPassword) {
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
     return res.status(400).json({
       success: false,
       message: 'Todos los campos son requeridos'
@@ -182,7 +192,11 @@ app.post('/api/auth/register', async (req, res) => {
     // Crear nuevo usuario
     const [result] = await connection.execute(
       'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)',
+<<<<<<< HEAD
       [email, hashedPassword, fullName, 'user']
+=======
+      [email, hashedPassword, userName, 'user']
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
     );
     
     await connection.end();
@@ -272,6 +286,7 @@ app.get('/api/auth/verify', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Ruta para solicitar recuperación de contraseña
 app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
@@ -385,6 +400,8 @@ app.post('/api/reset-password', async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
 // Rutas de CAPTCHA (simuladas)
 app.get('/api/captcha/generate', (req, res) => {
   const code = Math.random().toString(36).substring(2, 7).toUpperCase();

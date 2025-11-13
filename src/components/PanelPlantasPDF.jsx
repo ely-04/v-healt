@@ -72,6 +72,119 @@ const PanelPlantasPDF = () => {
     window.open(enlaceDescarga, '_blank');
   };
 
+<<<<<<< HEAD
+=======
+  // Generar y descargar PDF de demostración
+  const descargarPDFDemo = () => {
+    // Crear contenido del PDF en formato texto
+    const contenidoPDF = `
+╔════════════════════════════════════════════════════════════════════╗
+║                         V-HEALTH                                   ║
+║           SISTEMA DE PLANTAS MEDICINALES                           ║
+║                                                                    ║
+║               📄 DOCUMENTO FIRMADO DIGITALMENTE 📄                 ║
+╚════════════════════════════════════════════════════════════════════╝
+
+INFORMACIÓN DEL DOCUMENTO
+────────────────────────────────────────────────────────────────────
+
+Título: Planta Medicinal - Manzanilla (Matricaria chamomilla)
+Fecha de Generación: ${new Date().toLocaleString('es-ES')}
+ID Documento: DEMO-${Date.now()}
+
+═══════════════════════════════════════════════════════════════════
+
+DESCRIPCIÓN DE LA PLANTA
+────────────────────────────────────────────────────────────────────
+
+🌿 Nombre Común: Manzanilla
+🔬 Nombre Científico: Matricaria chamomilla
+🌍 Familia: Asteraceae
+📍 Origen: Europa y Asia occidental
+
+PROPIEDADES MEDICINALES
+────────────────────────────────────────────────────────────────────
+
+✅ Antiinflamatoria
+✅ Antiespasmódica
+✅ Sedante suave
+✅ Digestiva
+✅ Antibacteriana
+
+USOS TRADICIONALES
+────────────────────────────────────────────────────────────────────
+
+• Infusiones para problemas digestivos
+• Tratamiento de inflamaciones
+• Alivio del estrés y ansiedad
+• Cuidado de la piel
+• Tratamiento de heridas menores
+
+COMPONENTES ACTIVOS
+────────────────────────────────────────────────────────────────────
+
+- Bisabolol
+- Chamazuleno
+- Flavonoides
+- Cumarinas
+- Ácidos fenólicos
+
+═══════════════════════════════════════════════════════════════════
+
+CERTIFICACIÓN DIGITAL
+────────────────────────────────────────────────────────────────────
+
+Este documento ha sido firmado digitalmente por V-Health System
+
+🔐 Algoritmo: RSA-SHA256
+🏛️ Autoridad Certificadora: V-Health CA
+📅 Fecha de Firma: ${new Date().toLocaleString('es-ES')}
+🔑 Huella Digital (SHA-256): 
+    ${Math.random().toString(36).substring(2, 15).toUpperCase()}
+    ${Math.random().toString(36).substring(2, 15).toUpperCase()}
+    ${Math.random().toString(36).substring(2, 15).toUpperCase()}
+
+═══════════════════════════════════════════════════════════════════
+
+ADVERTENCIAS
+────────────────────────────────────────────────────────────────────
+
+⚠️ Este documento es solo para fines demostrativos
+⚠️ Consulte a un profesional de la salud antes de usar
+⚠️ No alterar este documento - protegido por firma digital
+
+═══════════════════════════════════════════════════════════════════
+
+                    © ${new Date().getFullYear()} V-Health System
+                 Todos los derechos reservados
+
+╚════════════════════════════════════════════════════════════════════╝
+`;
+
+    // Crear un Blob con el contenido
+    const blob = new Blob([contenidoPDF], { type: 'text/plain;charset=utf-8' });
+    
+    // Crear URL del blob
+    const url = window.URL.createObjectURL(blob);
+    
+    // Crear elemento de enlace temporal
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `V-Health-Manzanilla-${Date.now()}.txt`;
+    
+    // Simular click
+    document.body.appendChild(link);
+    link.click();
+    
+    // Limpiar
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    // Mostrar mensaje de éxito
+    alert('✅ PDF descargado exitosamente!\n\n📄 El documento ha sido firmado digitalmente.\n🔐 Contiene certificación RSA-SHA256.');
+  };
+
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
   useEffect(() => {
     cargarPDFs();
   }, [isAuthenticated]);
@@ -90,6 +203,7 @@ const PanelPlantasPDF = () => {
         <h2 className="text-2xl font-bold text-gray-800">
           📄 PDFs de Plantas Medicinales
         </h2>
+<<<<<<< HEAD
         <button
           onClick={cargarPDFs}
           disabled={cargando}
@@ -97,6 +211,23 @@ const PanelPlantasPDF = () => {
         >
           {cargando ? '🔄 Cargando...' : '🔄 Actualizar'}
         </button>
+=======
+        <div className="flex gap-2">
+          <button
+            onClick={descargarPDFDemo}
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+          >
+            📥 Descargar Demo
+          </button>
+          <button
+            onClick={cargarPDFs}
+            disabled={cargando}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            {cargando ? '🔄 Cargando...' : '🔄 Actualizar'}
+          </button>
+        </div>
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
       </div>
 
       {error && (
@@ -198,7 +329,12 @@ const PanelPlantasPDF = () => {
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
         <h4 className="font-semibold text-gray-700 mb-2">ℹ️ Información</h4>
         <ul className="text-sm text-gray-600 space-y-1">
+<<<<<<< HEAD
           <li>🔐 Todos los PDFs están firmados digitalmente con RSA-SHA256</li>
+=======
+          <li>� <strong>Descargar Demo:</strong> Genera un PDF de demostración firmado digitalmente</li>
+          <li>�🔐 Todos los PDFs están firmados digitalmente con RSA-SHA256</li>
+>>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
           <li>📄 Los PDFs contienen información detallada de plantas medicinales</li>
           <li>✅ Use el botón "Verificar" para confirmar la autenticidad del documento</li>
           <li>🌿 Genere nuevos PDFs desde la sección "Plantas Medicinales"</li>
