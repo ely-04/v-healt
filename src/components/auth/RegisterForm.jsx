@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
-const RegisterForm = ({ onToggle }) => {
+const RegisterForm = ({ onToggle, onSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,7 +12,8 @@ const RegisterForm = ({ onToggle }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [validationError, setValidationError] = useState('');
-  const { register, isLoading, error, clearError } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { register } = useAuth();
 
   // Función para calcular la fuerza de la contraseña
   const calculatePasswordStrength = (password) => {
@@ -38,7 +39,7 @@ const RegisterForm = ({ onToggle }) => {
     }
 
     // Limpiar errores cuando el usuario empiece a escribir
-    if (error) clearError();
+    if (validationError) setValidationError('');
   };
 
   const getPasswordStrengthText = () => {
@@ -82,46 +83,65 @@ const RegisterForm = ({ onToggle }) => {
     
     // Limpiar errores previos
     setValidationError('');
-    clearError();
-    
+    setIsLoading(true);
+
     // Validaciones del cliente
     if (!formData.name.trim()) {
       setValidationError('Por favor ingresa tu nombre completo');
+      setIsLoading(false);
       return;
     }
     
     if (!formData.email.trim()) {
       setValidationError('Por favor ingresa tu email');
+      setIsLoading(false);
       return;
     }
     
     if (!formData.password) {
       setValidationError('Por favor ingresa una contraseña');
+      setIsLoading(false);
       return;
     }
     
     if (!formData.confirmPassword) {
       setValidationError('Por favor confirma tu contraseña');
+      setIsLoading(false);
       return;
     }
     
     if (formData.password !== formData.confirmPassword) {
       setValidationError('Las contraseñas no coinciden');
+      setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 8) {
       setValidationError('La contraseña debe tener al menos 8 caracteres');
+      setIsLoading(false);
       return;
     }
 
     try {
       console.log('Intentando registrar:', formData.name, formData.email);
-      await register(formData.name, formData.email, formData.password);
-      // El redirect se maneja en el componente padre
+      const result = await register(formData.name, formData.email, formData.password);
+      
+      // Si el registro fue exitoso y tenemos un callback
+      if (result && onSuccess) {
+        // Asegurarse de que el usuario tenga un ID
+        const userWithId = result.user || { 
+          id: result.id || Date.now(), // Usar ID del resultado o timestamp como fallback
+          name: formData.name, 
+          email: formData.email 
+        };
+        console.log('Usuario registrado:', userWithId);
+        onSuccess(userWithId);
+      }
     } catch (err) {
       console.error('Error en registro:', err);
-      // El error se maneja en el contexto
+      setValidationError(err.message || 'Error en el registro');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -134,9 +154,9 @@ const RegisterForm = ({ onToggle }) => {
         <p className="text-gray-600 mt-2">Únete a la comunidad V-Health</p>
       </div>
 
-      {(error || validationError) && (
+      {validationError && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-          {validationError || error}
+          {validationError}
         </div>
       )}
 

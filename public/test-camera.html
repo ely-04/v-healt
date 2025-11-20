@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Cámara - V-Health</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #388e3c;
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #1976d2;
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status {
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Prueba de Permisos de Cámara</h1>
+        <p>Esta página te ayuda a verificar si la cámara funciona correctamente</p>
+        
+        <div id="status" class="status">Estado: Listo para probar</div>
+        
+        <button id="startButton" onclick="startCamera()">📷 Iniciar Cámara</button>
+        <button id="stopButton" onclick="stopCamera()" disabled>⏹️ Detener Cámara</button>
+        
+        <video id="video" autoplay muted style="display: none;"></video>
+        
+        <div id="info" class="info">
+            <h3>📋 Instrucciones:</h3>
+            <ol style="text-align: left;">
+                <li>Haz clic en "Iniciar Cámara"</li>
+                <li>El navegador te pedirá permisos</li>
+                <li>Selecciona "Permitir" o "Allow"</li>
+                <li>Deberías ver tu imagen en vivo</li>
+            </ol>
+        </div>
+
+        <div id="details" style="text-align: left; margin-top: 20px;">
+            <h3>🔧 Detalles técnicos:</h3>
+            <p><strong>Navegador:</strong> <span id="browser"></span></p>
+            <p><strong>Soporte MediaDevices:</strong> <span id="mediaSupport"></span></p>
+            <p><strong>Protocolo:</strong> <span id="protocol"></span></p>
+            <p><strong>URL:</strong> <span id="currentUrl"></span></p>
+        </div>
+
+        <div id="errorLog" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        let stream = null;
+        
+        // Llenar información técnica
+        document.getElementById('browser').textContent = navigator.userAgent;
+        document.getElementById('mediaSupport').textContent = navigator.mediaDevices ? '✅ Sí' : '❌ No';
+        document.getElementById('protocol').textContent = window.location.protocol;
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        function logError(error) {
+            const errorLog = document.getElementById('errorLog');
+            errorLog.innerHTML += `<div class="error"><strong>Error:</strong> ${error}</div>`;
+            console.error('Camera Error:', error);
+        }
+        
+        function logSuccess(message) {
+            const errorLog = document.getElementById('errorLog');
+            errorLog.innerHTML += `<div class="success"><strong>Éxito:</strong> ${message}</div>`;
+        }
+        
+        async function startCamera() {
+            updateStatus('Solicitando acceso a la cámara...', 'info');
+            
+            try {
+                // Verificar soporte
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('Tu navegador no soporta acceso a la cámara');
+                }
+                
+                // Solicitar permisos y stream
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user'
+                    }
+                });
+                
+                // Mostrar video
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                video.style.display = 'block';
+                
+                // Actualizar botones
+                document.getElementById('startButton').disabled = true;
+                document.getElementById('stopButton').disabled = false;
+                
+                updateStatus('✅ Cámara funcionando correctamente', 'success');
+                logSuccess('Acceso a la cámara concedido. El reconocimiento facial debería funcionar.');
+                
+                // Mostrar información del stream
+                const tracks = stream.getVideoTracks();
+                if (tracks.length > 0) {
+                    const settings = tracks[0].getSettings();
+                    logSuccess(`Resolución: ${settings.width}x${settings.height}`);
+                }
+                
+            } catch (error) {
+                updateStatus('❌ Error al acceder a la cámara', 'error');
+                
+                // Diagnóstico específico
+                if (error.name === 'NotAllowedError') {
+                    logError('Permisos denegados. Ve a configuración del navegador y permite el acceso a la cámara para este sitio.');
+                } else if (error.name === 'NotFoundError') {
+                    logError('No se encontró ninguna cámara. Verifica que tu cámara esté conectada.');
+                } else if (error.name === 'NotReadableError') {
+                    logError('La cámara está siendo usada por otra aplicación. Cierra otras apps que usen la cámara.');
+                } else if (error.name === 'OverconstrainedError') {
+                    logError('Las especificaciones de la cámara no son compatibles.');
+                } else if (error.name === 'SecurityError') {
+                    logError('Error de seguridad. Asegúrate de estar usando HTTPS o localhost.');
+                } else {
+                    logError(`${error.name}: ${error.message}`);
+                }
+            }
+        }
+        
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            const video = document.getElementById('video');
+            video.srcObject = null;
+            video.style.display = 'none';
+            
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
+            
+            updateStatus('Cámara detenida', 'info');
+            logSuccess('Cámara liberada correctamente');
+        }
+        
+        // Verificar permisos al cargar
+        window.addEventListener('load', async () => {
+            if (navigator.permissions) {
+                try {
+                    const permission = await navigator.permissions.query({ name: 'camera' });
+                    logSuccess(`Estado de permisos de cámara: ${permission.state}`);
+                    
+                    if (permission.state === 'denied') {
+                        logError('Los permisos de cámara están denegados. Resetea los permisos del sitio.');
+                    }
+                } catch (e) {
+                    console.log('No se pudo verificar permisos:', e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

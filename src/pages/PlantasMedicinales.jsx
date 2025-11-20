@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-<<<<<<< HEAD
-=======
 import jsPDF from 'jspdf';
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
-// Si usas Tailwind, elimina la importación de Plantas.css
 
 const PlantasMedicinales = () => {
   const [selectedCategory, setSelectedCategory] = useState('todas');
@@ -17,7 +13,7 @@ const PlantasMedicinales = () => {
       nombre: 'Manzanilla',
       nombreCientifico: 'Matricaria chamomilla',
       categoria: 'digestiva',
-      imagen: '',
+      imagen: '🌼',
       propiedades: ['Antiinflamatoria', 'Calmante', 'Digestiva'],
       usos: ['Indigestión', 'Insomnio', 'Ansiedad', 'Irritación de piel'],
       preparacion: 'Infusión: 1 cucharada de flores secas por taza de agua caliente. Dejar reposar 5-10 minutos.',
@@ -28,7 +24,7 @@ const PlantasMedicinales = () => {
       nombre: 'Jengibre',
       nombreCientifico: 'Zingiber officinale',
       categoria: 'digestiva',
-      imagen: '',
+      imagen: '🫚',
       propiedades: ['Antiemético', 'Antiinflamatorio', 'Digestivo'],
       usos: ['Náuseas', 'Mareos', 'Indigestión', 'Dolor muscular'],
       preparacion: 'Té: Hervir 2-3 rodajas de jengibre fresco en agua por 10 minutos.',
@@ -39,7 +35,7 @@ const PlantasMedicinales = () => {
       nombre: 'Aloe Vera',
       nombreCientifico: 'Aloe barbadensis',
       categoria: 'dermatologica',
-      imagen: '',
+      imagen: '🌿',
       propiedades: ['Cicatrizante', 'Hidratante', 'Antiinflamatoria'],
       usos: ['Quemaduras menores', 'Heridas', 'Piel seca', 'Eczema'],
       preparacion: 'Aplicar gel directamente sobre la piel limpia 2-3 veces al día.',
@@ -50,7 +46,7 @@ const PlantasMedicinales = () => {
       nombre: 'Eucalipto',
       nombreCientifico: 'Eucalyptus globulus',
       categoria: 'respiratoria',
-      imagen: '',
+      imagen: '🌿',
       propiedades: ['Expectorante', 'Antiséptico', 'Descongestionante'],
       usos: ['Resfriado', 'Bronquitis', 'Sinusitis', 'Dolor muscular'],
       preparacion: 'Vaporizaciones: 5-10 gotas de aceite esencial en agua caliente.',
@@ -61,7 +57,7 @@ const PlantasMedicinales = () => {
       nombre: 'Lavanda',
       nombreCientifico: 'Lavandula angustifolia',
       categoria: 'relajante',
-      imagen: '',
+      imagen: '💜',
       propiedades: ['Relajante', 'Antiséptica', 'Cicatrizante'],
       usos: ['Insomnio', 'Ansiedad', 'Heridas menores', 'Dolores de cabeza'],
       preparacion: 'Infusión: 1 cucharadita de flores secas por taza. Aromaterapia: difusor.',
@@ -91,59 +87,6 @@ const PlantasMedicinales = () => {
     setGenerandoPDF(planta.id);
     
     try {
-<<<<<<< HEAD
-      const token = localStorage.getItem('token');
-      
-      // Generar y firmar PDF automáticamente
-      const response = await fetch('/api/plantas-pdf/completo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          plantaData: {
-            ...planta,
-            emoji: planta.imagen // Guardar el emoji como imagen
-          }
-        })
-      });
-
-      // Verificar si la respuesta es exitosa
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error HTTP:', response.status, response.statusText);
-        console.error('Respuesta del servidor:', errorText);
-        throw new Error(`Error del servidor (${response.status}): ${response.statusText}`);
-      }
-
-      // Verificar si el contenido es JSON válido
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const responseText = await response.text();
-        console.error('Respuesta no es JSON:', responseText);
-        throw new Error('El servidor no devolvió un JSON válido');
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Abrir el PDF en una nueva pestaña
-        const pdfUrl = data.acciones.ver;
-        window.open(pdfUrl, '_blank');
-        
-        // Mostrar notificación de éxito
-        alert(`✅ PDF de ${planta.nombre} generado y firmado digitalmente.\n\n` +
-              `🔐 Algoritmo: ${data.seguridad.algoritmo}\n` +
-              `📅 Fecha: ${new Date(data.seguridad.fechaFirma).toLocaleString('es-ES')}\n` +
-              `🔗 Hash: ${data.seguridad.hash}`);
-      } else {
-        throw new Error(data.message || 'Error desconocido del servidor');
-      }
-    } catch (error) {
-      console.error('Error generando PDF:', error);
-      alert(`❌ Error generando PDF: ${error.message}`);
-=======
       // Generar PDF localmente usando jsPDF
       const doc = new jsPDF();
       const fechaActual = new Date().toLocaleString('es-ES');
@@ -285,7 +228,6 @@ const PlantasMedicinales = () => {
     } catch (error) {
       console.error('Error generando PDF:', error);
       alert(`❌ Error: ${error.message}`);
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
     } finally {
       setGenerandoPDF(null);
     }

@@ -1,4 +1,5 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import User from '../models/User.js';
 import { authenticate, createSendToken } from '../middleware/auth.js';
 import { body, validationResult } from 'express-validator';
@@ -176,7 +177,7 @@ router.get('/me', authenticate, async (req, res) => {
   }
 });
 
-// @desc    Verificar si el token es válido
+// @desc    Verificar token JWT
 // @route   GET /api/auth/verify
 // @access  Private
 router.get('/verify', authenticate, (req, res) => {
@@ -188,5 +189,148 @@ router.get('/verify', authenticate, (req, res) => {
     }
   });
 });
+
+// @desc    Login con reconocimiento facial
+// @route   POST /api/auth/facial-login
+// @access  Public
+router.post('/facial-login', async (req, res) => {
+  try {
+    const { faceDescriptor, confidence } = req.body;
+
+    if (!faceDescriptor || confidence < 0.6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Confianza de reconocimiento muy baja. Intenta nuevamente.'
+      });
+    }
+
+    // Buscar todos los usuarios con descriptor facial
+    const users = await User.findAll({
+      where: {
+        faceDescriptor: {
+          [Op.ne]: null
+        }
+      }
+    });
+
+    let matchedUser = null;
+    let bestMatch = { distance: Infinity, user: null };
+
+    // Comparar con descriptores almacenados
+    for (const user of users) {
+      if (user.faceDescriptor) {
+        try {
+          const storedDescriptor = JSON.parse(user.faceDescriptor);
+          const distance = euclideanDistance(faceDescriptor, storedDescriptor);
+          
+          if (distance < 0.6 && distance < bestMatch.distance) {
+            bestMatch = { distance, user };
+          }
+        } catch (error) {
+          console.error('Error parsing face descriptor:', error);
+        }
+      }
+    }
+
+    if (bestMatch.user) {
+      matchedUser = bestMatch.user;
+      
+      // Actualizar último login
+      await matchedUser.update({
+        lastLogin: new Date(),
+        loginMethod: 'facial'
+      });
+
+      // Generar token
+      const token = createSendToken(matchedUser);
+
+      res.json({
+        success: true,
+        message: 'Login facial exitoso',
+        user: {
+          id: matchedUser.id,
+          name: matchedUser.name,
+          email: matchedUser.email
+        },
+        token
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Rostro no reconocido. Asegúrate de haber registrado tu rostro previamente.'
+      });
+    }
+
+  } catch (error) {
+    console.error('Error en login facial:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// @desc    Registrar datos faciales
+// @route   POST /api/auth/register-face
+// @access  Public
+router.post('/register-face', async (req, res) => {
+  try {
+    const { userId, faceDescriptor, captureData } = req.body;
+
+    if (!userId || !faceDescriptor) {
+      return res.status(400).json({
+        success: false,
+        message: 'Datos incompletos'
+      });
+    }
+
+    // Buscar usuario
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    // Actualizar usuario con datos faciales
+    await user.update({
+      faceDescriptor: JSON.stringify(faceDescriptor),
+      faceRegisteredAt: new Date(),
+      faceMetadata: JSON.stringify(captureData)
+    });
+
+    res.json({
+      success: true,
+      message: 'Registro facial completado exitosamente',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        hasFaceAuth: true
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en registro facial:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Función auxiliar para calcular distancia euclidiana
+function euclideanDistance(desc1, desc2) {
+  if (!desc1 || !desc2 || desc1.length !== desc2.length) {
+    return Infinity;
+  }
+  
+  let sum = 0;
+  for (let i = 0; i < desc1.length; i++) {
+    sum += Math.pow(desc1[i] - desc2[i], 2);
+  }
+  return Math.sqrt(sum);
+}
 
 export default router;

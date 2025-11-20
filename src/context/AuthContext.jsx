@@ -1,241 +1,187 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext({});
 
-// Estados de autenticación
-const initialState = {
-  user: null,
-  token: null,
-  isAuthenticated: false,
-  isLoading: true,
-  error: null
-};
-
-// Acciones
-const AUTH_ACTIONS = {
-  LOGIN_START: 'LOGIN_START',
-  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-  LOGIN_FAILURE: 'LOGIN_FAILURE',
-  LOGOUT: 'LOGOUT',
-  SET_LOADING: 'SET_LOADING',
-  CLEAR_ERROR: 'CLEAR_ERROR',
-  UPDATE_USER: 'UPDATE_USER'
-};
-
-// Reducer
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case AUTH_ACTIONS.LOGIN_START:
-      return {
-        ...state,
-        isLoading: true,
-        error: null
-      };
-    case AUTH_ACTIONS.LOGIN_SUCCESS:
-      return {
-        ...state,
-        user: action.payload.user,
-        token: action.payload.token,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null
-      };
-    case AUTH_ACTIONS.LOGIN_FAILURE:
-      return {
-        ...state,
-        user: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: action.payload
-      };
-    case AUTH_ACTIONS.LOGOUT:
-      return {
-        ...initialState,
-        isLoading: false
-      };
-    case AUTH_ACTIONS.SET_LOADING:
-      return {
-        ...state,
-        isLoading: action.payload
-      };
-    case AUTH_ACTIONS.CLEAR_ERROR:
-      return {
-        ...state,
-        error: null
-      };
-    case AUTH_ACTIONS.UPDATE_USER:
-      return {
-        ...state,
-        user: action.payload
-      };
-    default:
-      return state;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
   }
+  return context;
 };
 
-// Provider del contexto
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // API Base URL
-  const API_BASE_URL = 'http://localhost:3000/api';
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
-  // Función para hacer peticiones HTTP
-  const apiRequest = async (url, options = {}) => {
-    const token = localStorage.getItem('token');
-    
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers
-      },
-      ...options
-    };
-
+  const checkAuth = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}${url}`, config);
-      const data = await response.json();
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await fetch('http://localhost:3000/api/user/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Error en la petición');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('token');
+        }
       }
-
-      return data;
     } catch (error) {
-      throw error;
+      console.error('Error verificando autenticación:', error);
+      localStorage.removeItem('token');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Función de login
   const login = async (email, password) => {
-    dispatch({ type: AUTH_ACTIONS.LOGIN_START });
-
     try {
-      const data = await apiRequest('/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password })
       });
 
-      // Guardar token en localStorage
-      localStorage.setItem('token', data.token);
+      const data = await response.json();
 
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_SUCCESS,
-        payload: {
-          user: data.user || (data.data && data.data.user),
-          token: data.token
-        }
-      });
-
-      return data;
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        setUser(data.user);
+        setIsAuthenticated(true);
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
     } catch (error) {
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_FAILURE,
-        payload: error.message
-      });
-      throw error;
+      console.error('Error en login:', error);
+      return { success: false, message: 'Error de conexión' };
     }
   };
 
-  // Función de registro
-  const register = async (name, email, password) => {
-    dispatch({ type: AUTH_ACTIONS.LOGIN_START });
-
+  // Función específica para login directo (facial o manual)
+  const loginDirect = async (userData, token) => {
     try {
-      // Registrar usuario
-      const registerData = await apiRequest('/auth/register', {
+      localStorage.setItem('token', token);
+      setUser(userData);
+      setIsAuthenticated(true);
+      return { success: true };
+    } catch (error) {
+      console.error('Error en login directo:', error);
+      return { success: false, message: 'Error estableciendo sesión' };
+    }
+  };
+
+  const loginWithFace = async (faceData) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/face-login', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          faceDescriptor: faceData.descriptor,
+          landmarks: faceData.landmarks,
+          expressions: faceData.expressions
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        setUser(data.user);
+        setIsAuthenticated(true);
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Error en login facial:', error);
+      return { success: false, message: 'Error de conexión' };
+    }
+  };
+
+  const register = async (name, email, password) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ name, email, password })
       });
 
-      // Después del registro exitoso, hacer login automático
-      const loginData = await apiRequest('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password })
-      });
+      const data = await response.json();
 
-      // Guardar token en localStorage
-      localStorage.setItem('token', loginData.token);
-
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_SUCCESS,
-        payload: {
-          user: loginData.user,
-          token: loginData.token
-        }
-      });
-
-      return { ...registerData, user: loginData.user, token: loginData.token };
+      if (data.success) {
+        return { 
+          success: true, 
+          user: data.user,
+          message: 'Usuario registrado exitosamente'
+        };
+      } else {
+        throw new Error(data.message || 'Error en el registro');
+      }
     } catch (error) {
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_FAILURE,
-        payload: error.message
-      });
+      console.error('Error en registro:', error);
       throw error;
     }
   };
 
-  // Función de logout
-  const logout = async () => {
+  const registerFace = async (email, password, name, faceData) => {
     try {
-      await apiRequest('/auth/logout', {
-        method: 'POST'
+      const response = await fetch('http://localhost:3000/api/auth/register-face', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          name,
+          faceDescriptor: faceData.descriptor,
+          landmarks: faceData.landmarks
+        })
       });
+
+      const data = await response.json();
+      return data;
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    } finally {
-      // Limpiar localStorage
-      localStorage.removeItem('token');
-      dispatch({ type: AUTH_ACTIONS.LOGOUT });
+      console.error('Error registrando con face:', error);
+      return { success: false, message: 'Error de conexión' };
     }
   };
 
-  // Función para verificar token
-  const verifyToken = async () => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false });
-      return;
-    }
-
-    try {
-      const data = await apiRequest('/auth/verify');
-      
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_SUCCESS,
-        payload: {
-          user: data.data.user,
-          token
-        }
-      });
-    } catch (error) {
-      localStorage.removeItem('token');
-      dispatch({ type: AUTH_ACTIONS.LOGOUT });
-    } finally {
-      dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false });
-    }
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setIsAuthenticated(false);
   };
-
-  // Función para limpiar errores
-  const clearError = () => {
-    dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
-  };
-
-  // Verificar token al cargar la aplicación
-  useEffect(() => {
-    verifyToken();
-  }, []);
 
   const value = {
-    ...state,
+    user,
+    isAuthenticated,
+    loading,
     login,
+    loginDirect,
     register,
+    loginWithFace,
+    registerFace,
     logout,
-    clearError,
-    verifyToken
+    checkAuth
   };
 
   return (
@@ -244,14 +190,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-// Hook personalizado para usar el contexto
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
-  }
-  return context;
-};
-
-export default AuthContext;

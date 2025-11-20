@@ -4,10 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
-<<<<<<< HEAD
-const nodemailer = require('nodemailer'); // + Añadir
-=======
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
+const nodemailer = require('nodemailer');
 
 // Cargar variables de entorno
 dotenv.config();
@@ -64,8 +61,7 @@ async function initializeDatabase() {
   }
 }
 
-<<<<<<< HEAD
-// + Añadir: transporte de email y helpers
+// Configuración de email y helpers
 let emailTransporter;
 
 function mask(value) {
@@ -75,7 +71,6 @@ function mask(value) {
 }
 
 function getEmailConfig() {
-  // Preferir EMAIL_* y permitir fallback a SMTP_*
   const host = process.env.EMAIL_HOST || process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = parseInt(process.env.EMAIL_PORT || process.env.SMTP_PORT || '587', 10);
   const secure = String(process.env.SMTP_SECURE || '').toLowerCase() === 'true' || port === 465;
@@ -103,7 +98,6 @@ async function initializeEmailService() {
   });
 
   try {
-    // Si es Gmail, usa service para facilitar
     const isGmail = /gmail\.com$/i.test(user) || /gmail\.com$/i.test(host);
     emailTransporter = isGmail
       ? nodemailer.createTransport({
@@ -164,7 +158,6 @@ async function sendPasswordResetEmail(toEmail, name, resetToken) {
   }
 }
 
-// + NUEVO: enviar correo genérico
 async function sendGenericEmail(toEmail, subject, html) {
   if (!emailTransporter) {
     console.warn('⚠️ Transporte de email no disponible.');
@@ -181,7 +174,6 @@ async function sendGenericEmail(toEmail, subject, html) {
   }
 }
 
-// + NUEVO: obtener correos (uno / todos)
 async function getUserEmails(filterEmail) {
   if (filterEmail) {
     return await executeQuery('SELECT id, email, name FROM users WHERE email = ?', [filterEmail]);
@@ -190,39 +182,19 @@ async function getUserEmails(filterEmail) {
 }
 
 // Middlewares
-// Reemplazar la configuración CORS actual por una más permisiva en desarrollo
 app.use(cors({
-  origin: true,                 // refleja el origin del request (permite todos en dev)
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 204
-=======
-// Middlewares
-app.use(cors({
-  origin: [
-    'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 
-    'http://localhost:5176', 'http://localhost:5177', 'http://localhost:5178', 
-    'http://localhost:5179', 'http://localhost:5180', 'http://localhost:5181', 
-    'http://localhost:5182', 'http://localhost:5183', 'http://localhost:5184'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
 }));
 
 app.use(express.json({ limit: '10mb' }));
 
-<<<<<<< HEAD
-// Middleware para logging de requests (agregar Origin para depurar CORS)
-app.use((req, res, next) => {
-  console.log(`📨 ${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.headers.origin || 'n/a'}`);
-=======
 // Middleware para logging de requests
 app.use((req, res, next) => {
-  console.log(`📨 ${new Date().toISOString()} - ${req.method} ${req.path}`);
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
+  console.log(`📨 ${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.headers.origin || 'n/a'}`);
   next();
 });
 
@@ -386,16 +358,25 @@ app.post('/api/auth/register', async (req, res) => {
     const currentDate = new Date();
 
     // Insertar nuevo usuario con fechas
-    await executeQuery(
+    const result = await executeQuery(
       'INSERT INTO users (email, password, name, role, createdAt, updatedAt, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [email, hashedPassword, name, 'user', currentDate, currentDate, 1]
     );
 
-    console.log('✅ Usuario registrado exitosamente');
+    // Obtener el ID del usuario recién creado
+    const newUserId = result.insertId;
+
+    console.log(`✅ Usuario registrado exitosamente con ID: ${newUserId}`);
 
     res.status(201).json({
       success: true,
-      message: 'Usuario registrado exitosamente'
+      message: 'Usuario registrado exitosamente',
+      user: {
+        id: newUserId,
+        email: email,
+        name: name,
+        role: 'user'
+      }
     });
 
   } catch (error) {
@@ -408,7 +389,30 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
+// Middleware de autenticación
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token requerido'
+    });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || 'v-health-secret-key', (err, user) => {
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: 'Token inválido'
+      });
+    }
+    req.user = user;
+    next();
+  });
+}
+
 // Ruta para solicitar recuperación de contraseña
 app.post('/api/auth/forgot-password', async (req, res) => {
   try {
@@ -437,54 +441,16 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         error: dbError.message 
       });
     }
+
     if (users.length === 0) {
       console.log('⚠️ Usuario no encontrado, respondiendo genérico por seguridad');
       return res.json({ 
         success: true, 
         message: 'Si el correo existe, recibirás un enlace de recuperación' 
-=======
-// Middleware de autenticación
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Token requerido'
-    });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET || 'v-health-secret-key', (err, user) => {
-    if (err) {
-      return res.status(403).json({
-        success: false,
-        message: 'Token inválido'
-      });
-    }
-    req.user = user;
-    next();
-  });
-}
-
-// Ruta protegida de ejemplo
-app.get('/api/user/profile', authenticateToken, async (req, res) => {
-  try {
-    const users = await executeQuery(
-      'SELECT id, email, name, role FROM users WHERE id = ?',
-      [req.user.userId]
-    );
-
-    if (users.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Usuario no encontrado'
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
       });
     }
 
     const user = users[0];
-<<<<<<< HEAD
     console.log(`👤 Usuario encontrado: ${user.name} (ID: ${user.id})`);
     
     // Generar token
@@ -561,7 +527,403 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// + Endpoint de prueba para validar envío de correo sin el flujo de recuperación
+// Ruta para restablecer contraseña
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token y nueva contraseña son requeridos'
+      });
+    }
+
+    // Verificar el token de recuperación
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'v-health-secret-key');
+    } catch (error) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token inválido o expirado'
+      });
+    }
+
+    const { userId } = decoded;
+
+    // Verificar si el token existe en la base de datos y está asociado al usuario
+    const tokens = await executeQuery(
+      'SELECT * FROM password_reset_tokens WHERE userId = ? AND token = ? AND used = 0',
+      [userId, token]
+    );
+
+    if (tokens.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token inválido o ya utilizado'
+      });
+    }
+
+    // Encriptar nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    // Actualizar contraseña del usuario
+    await executeQuery(
+      'UPDATE users SET password = ?, updatedAt = ? WHERE id = ?',
+      [hashedPassword, new Date(), userId]
+    );
+
+    // Marcar el token como utilizado
+    await executeQuery(
+      'UPDATE password_reset_tokens SET used = 1, usedAt = ? WHERE id = ?',
+      [new Date(), tokens[0].id]
+    );
+
+    console.log('✅ Contraseña restablecida exitosamente');
+
+    res.json({
+      success: true,
+      message: 'Contraseña restablecida exitosamente'
+    });
+
+  } catch (error) {
+    console.error('❌ Error en reset-password:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor',
+      error: error.message
+    });
+  }
+});
+
+// Ruta protegida de ejemplo - perfil de usuario
+app.get('/api/user/profile', authenticateToken, async (req, res) => {
+  try {
+    const users = await executeQuery(
+      'SELECT id, email, name, role FROM users WHERE id = ?',
+      [req.user.userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    const user = users[0];
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.name,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error obteniendo perfil:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Ruta para registro facial
+app.post('/api/auth/register-face', async (req, res) => {
+  try {
+    const { userId, faceDescriptor, captureData } = req.body;
+
+    if (!userId || !faceDescriptor) {
+      return res.status(400).json({
+        success: false,
+        message: 'Datos incompletos'
+      });
+    }
+
+    console.log(`👤 Registrando datos faciales para usuario ID: ${userId}`);
+
+    // Verificar que el usuario existe
+    const users = await executeQuery(
+      'SELECT id, name, email FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    const user = users[0];
+
+    // Actualizar usuario con datos faciales
+    await executeQuery(
+      'UPDATE users SET faceDescriptor = ?, faceRegisteredAt = NOW(), faceMetadata = ? WHERE id = ?',
+      [JSON.stringify(faceDescriptor), JSON.stringify(captureData), userId]
+    );
+
+    console.log('✅ Registro facial completado exitosamente');
+
+    res.json({
+      success: true,
+      message: 'Registro facial completado exitosamente',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        hasFaceAuth: true
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error en registro facial:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Ruta para obtener rostros registrados (para validación en frontend)
+app.get('/api/facial/registered-faces', async (req, res) => {
+  try {
+    console.log('📋 Obteniendo rostros registrados para validación...');
+
+    const [users] = await connectionPool.execute(
+      'SELECT id, name, email, faceDescriptor FROM users WHERE faceDescriptor IS NOT NULL AND isActive = 1'
+    );
+
+    const registeredFaces = users.map(user => {
+      try {
+        return {
+          id: user.id,
+          userId: user.id,
+          name: user.name,
+          email: user.email,
+          descriptor: JSON.parse(user.faceDescriptor)
+        };
+      } catch (error) {
+        console.warn(`⚠️ Error parsing descriptor for user ${user.id}:`, error);
+        return null;
+      }
+    }).filter(face => face !== null);
+
+    console.log(`✅ ${registeredFaces.length} rostros válidos encontrados`);
+
+    res.json({
+      success: true,
+      faces: registeredFaces,
+      count: registeredFaces.length
+    });
+
+  } catch (error) {
+    console.error('❌ Error obteniendo rostros registrados:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor',
+      faces: []
+    });
+  }
+});
+
+// Ruta para login con reconocimiento facial
+app.post('/api/auth/facial-login', async (req, res) => {
+  try {
+    const { userId, userName, faceDescriptor, confidence, isAuthorized, matchedUser } = req.body;
+
+    console.log(`🔍 Login facial - Usuario: ${userName || 'Desconocido'}, Autorizado: ${isAuthorized}`);
+
+    // ✅ NUEVA VALIDACIÓN: Verificar que el rostro esté autorizado (validado en frontend)
+    if (!isAuthorized || !userId || !faceDescriptor) {
+      console.log('❌ Acceso denegado - Rostro no autorizado en frontend');
+      return res.status(401).json({
+        success: false,
+        message: 'Acceso no autorizado. Rostro no registrado en el sistema.'
+      });
+    }
+
+    if (!confidence || confidence < 60) {
+      return res.status(400).json({
+        success: false,
+        message: 'Confianza de reconocimiento muy baja. Intenta nuevamente.'
+      });
+    }
+
+    // Buscar el usuario específico en la base de datos para confirmar
+    const [users] = await connectionPool.execute(
+      'SELECT id, email, name, role, faceDescriptor, isActive FROM users WHERE id = ? AND isActive = 1',
+      [userId]
+    );
+
+    if (users.length === 0) {
+      console.log(`❌ Usuario ${userId} no encontrado en BD`);
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado o inactivo'
+      });
+    }
+
+    const user = users[0];
+
+    // Verificar que el usuario tiene descriptor facial
+    if (!user.faceDescriptor) {
+      return res.status(400).json({
+        success: false,
+        message: 'Usuario sin reconocimiento facial registrado'
+      });
+    }
+
+    console.log(`✅ Login facial exitoso para: ${user.name} (${user.email}) - Confianza: ${confidence}%`);
+
+    // Actualizar último login
+    await connectionPool.execute(
+      'UPDATE users SET lastLogin = NOW() WHERE id = ?',
+      [user.id]
+    );
+
+    // Generar JWT token
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email, 
+        role: user.role,
+        loginMethod: 'facial'
+      },
+      process.env.JWT_SECRET || 'v-health-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    // Respuesta exitosa
+    res.json({
+      success: true,
+      message: `Bienvenido ${user.name}`,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        fullName: user.name,
+        role: user.role
+      },
+      token,
+      loginMethod: 'facial',
+      confidence: confidence
+    });
+
+  } catch (error) {
+    console.error('❌ Error en login facial:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Función auxiliar para calcular distancia euclidiana
+function euclideanDistance(desc1, desc2) {
+  if (!desc1 || !desc2 || desc1.length !== desc2.length) {
+    return Infinity;
+  }
+  
+  let sum = 0;
+  for (let i = 0; i < desc1.length; i++) {
+    sum += Math.pow(desc1[i] - desc2[i], 2);
+  }
+  return Math.sqrt(sum);
+}
+
+// Endpoint para verificar usuarios con registro facial
+app.get('/api/auth/face-users', authenticateToken, async (req, res) => {
+  try {
+    console.log('🔍 Consultando usuarios con registro facial...');
+
+    // Obtener todos los usuarios
+    const allUsers = await executeQuery(
+      'SELECT id, name, email, faceDescriptor, faceRegisteredAt, createdAt FROM users ORDER BY id'
+    );
+
+    // Separar usuarios con y sin rostro
+    const usersWithFace = allUsers.filter(user => user.faceDescriptor !== null);
+    const usersWithoutFace = allUsers.filter(user => user.faceDescriptor === null);
+
+    // Estadísticas
+    const stats = {
+      total: allUsers.length,
+      withFace: usersWithFace.length,
+      withoutFace: usersWithoutFace.length,
+      percentage: allUsers.length > 0 ? ((usersWithFace.length / allUsers.length) * 100).toFixed(1) : 0
+    };
+
+    // Preparar datos de usuarios con rostro
+    const faceUsersData = usersWithFace.map(user => {
+      let descriptorLength = 0;
+      try {
+        if (user.faceDescriptor) {
+          descriptorLength = JSON.parse(user.faceDescriptor).length;
+        }
+      } catch (e) {
+        console.warn('Error parsing descriptor for user:', user.id);
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        faceRegisteredAt: user.faceRegisteredAt,
+        descriptorDimensions: descriptorLength,
+        canUseFacialLogin: true
+      };
+    });
+
+    // Preparar datos de usuarios sin rostro
+    const noFaceUsersData = usersWithoutFace.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      canUseFacialLogin: false
+    }));
+
+    console.log(`✅ Consulta completada: ${stats.withFace}/${stats.total} usuarios con rostro`);
+
+    res.json({
+      success: true,
+      message: 'Consulta de usuarios con registro facial completada',
+      statistics: {
+        total: stats.total,
+        withFacialAuth: stats.withFace,
+        withoutFacialAuth: stats.withoutFace,
+        facialAuthPercentage: `${stats.percentage}%`
+      },
+      usersWithFace: faceUsersData,
+      usersWithoutFace: noFaceUsersData,
+      recommendations: {
+        forUsersWithoutFace: [
+          'Hacer login normal con email/contraseña',
+          'Ir al Dashboard',
+          'Usar la opción "Configurar Login Facial"'
+        ],
+        forUsersWithFace: [
+          'Pueden usar el botón de "Login Facial" en la página principal',
+          'El sistema detectará automáticamente su rostro'
+        ]
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error consultando usuarios con rostro:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
+// Utilities endpoints para email
 app.post('/api/utils/test-email', async (req, res) => {
   try {
     const to = (req.body && req.body.to) || process.env.EMAIL_USER;
@@ -655,114 +1017,6 @@ app.post('/api/utils/broadcast-email', async (req, res) => {
   }
 });
 
-// Ruta para restablecer contraseña
-app.post('/api/auth/reset-password', async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-
-    if (!token || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        message: 'Token y nueva contraseña son requeridos'
-      });
-    }
-
-    // Verificar el token de recuperación
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET || 'v-health-secret-key');
-    } catch (error) {
-      return res.status(401).json({
-        success: false,
-        message: 'Token inválido o expirado'
-      });
-    }
-
-    const { userId } = decoded;
-
-    // Verificar si el token existe en la base de datos y está asociado al usuario
-    const tokens = await executeQuery(
-      'SELECT * FROM password_reset_tokens WHERE userId = ? AND token = ? AND used = 0',
-      [userId, token]
-    );
-
-    if (tokens.length === 0) {
-      return res.status(401).json({
-        success: false,
-        message: 'Token inválido o ya utilizado'
-      });
-    }
-
-    // Encriptar nueva contraseña
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-    // Actualizar contraseña del usuario
-    await executeQuery(
-      'UPDATE users SET password = ?, updatedAt = ? WHERE id = ?',
-      [hashedPassword, new Date(), userId]
-    );
-
-    // Marcar el token como utilizado
-    await executeQuery(
-      'UPDATE password_reset_tokens SET used = 1, usedAt = ? WHERE id = ?',
-      [new Date(), tokens[0].id]
-    );
-
-    console.log('✅ Contraseña restablecida exitosamente');
-
-    res.json({
-      success: true,
-      message: 'Contraseña restablecida exitosamente'
-    });
-
-  } catch (error) {
-    console.error('❌ Error en reset-password:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error interno del servidor',
-      error: error.message
-=======
-    res.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.name,
-        role: user.role
-      }
-    });
-
-  } catch (error) {
-    console.error('❌ Error obteniendo perfil:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error interno del servidor'
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01
-    });
-  }
-});
-
-<<<<<<< HEAD
-// Ruta de ejemplo protegida
-app.get('/api/protected', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Ruta protegida accedida exitosamente'
-  });
-});
-
-// Iniciar servidor y base de datos
-app.listen(PORT, async () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  const dbInitialized = await initializeDatabase();
-  if (!dbInitialized) {
-    console.error('❌ No se pudo iniciar el servidor debido a errores en la base de datos');
-    process.exit(1);
-  }
-  // + Inicializar email
-  await initializeEmailService();
-});
-=======
 // ===== RUTAS DE SISTEMA DE FIRMAS DIGITALES =====
 
 // Buscar firmas digitales internas
@@ -1142,6 +1396,14 @@ app.get('/api/plantas-pdf/lista', authenticateToken, async (req, res) => {
   }
 });
 
+// Ruta de ejemplo protegida
+app.get('/api/protected', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Ruta protegida accedida exitosamente'
+  });
+});
+
 // Manejo de errores global
 app.use((error, req, res, next) => {
   console.error('💥 Error no manejado:', error);
@@ -1190,6 +1452,9 @@ async function startServer() {
       process.exit(1);
     }
 
+    // AGREGAR ESTA LÍNEA:
+    await initializeEmailService();
+
     // Iniciar servidor
     const server = app.listen(PORT, () => {
       console.log('🎉 ¡V-Health Server iniciado correctamente!');
@@ -1199,7 +1464,6 @@ async function startServer() {
       console.log('🛑 Presiona Ctrl+C para detener');
     });
 
-    // Configurar timeout del servidor
     server.timeout = 30000;
 
   } catch (error) {
@@ -1210,4 +1474,3 @@ async function startServer() {
 
 // Iniciar servidor
 startServer();
->>>>>>> 1e362837b1ed57db881985929a4c40ab95f93d01

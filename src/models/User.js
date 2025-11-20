@@ -75,6 +75,22 @@ const User = sequelize.define('User', {
   passwordResetExpires: {
     type: DataTypes.DATE,
     allowNull: true
+  },
+  faceDescriptor: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  faceRegisteredAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  faceMetadata: {
+    type: DataTypes.TEXT, // JSON con datos de captura
+    allowNull: true
+  },
+  loginMethod: {
+    type: DataTypes.ENUM('password', 'facial'),
+    defaultValue: 'password'
   }
 }, {
   tableName: 'users',
