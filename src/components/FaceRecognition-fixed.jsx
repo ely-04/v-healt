@@ -18,13 +18,14 @@ const FaceRecognition = ({ onFaceDetected, onError, registeredFaces = [] }) => {
   }, []);
 
   // Función para comparar rostros con base de datos registrada
-  const compareFaces = (currentDescriptor, registeredFaces, threshold = 0.6) => {
+  const compareFaces = (currentDescriptor, registeredFaces, threshold = 0.5) => { // ⚠️ ESTRICTO: 0.5 para evitar confusión entre usuarios
     if (!registeredFaces || registeredFaces.length === 0) {
       return { isMatch: false, confidence: 0, matchedUser: null, distance: 1 };
     }
 
     let bestMatch = null;
     let bestDistance = Infinity;
+    let allMatches = []; // Para debugging
 
     registeredFaces.forEach(registeredFace => {
       if (registeredFace.descriptor && registeredFace.descriptor.length === 128) {
@@ -34,6 +35,13 @@ const FaceRecognition = ({ onFaceDetected, onError, registeredFaces = [] }) => {
             currentDescriptor, 
             new Float32Array(registeredFace.descriptor)
           );
+          
+          // Guardar todas las distancias para debugging
+          allMatches.push({
+            userId: registeredFace.id,
+            userName: registeredFace.name,
+            distance: distance
+          });
           
           if (distance < bestDistance) {
             bestDistance = distance;
@@ -47,6 +55,16 @@ const FaceRecognition = ({ onFaceDetected, onError, registeredFaces = [] }) => {
 
     const isMatch = bestDistance < threshold;
     const confidence = Math.max(0, Math.min(100, Math.round((1 - bestDistance) * 100)));
+    
+    // Log de debugging para ver todas las comparaciones
+    console.log('🔍 Comparación de rostros:', {
+      threshold: threshold,
+      bestDistance: bestDistance.toFixed(3),
+      isMatch: isMatch,
+      confidence: confidence,
+      bestMatch: bestMatch ? { id: bestMatch.id, name: bestMatch.name } : null,
+      allDistances: allMatches.sort((a, b) => a.distance - b.distance).slice(0, 5)
+    });
 
     return {
       isMatch,
@@ -201,8 +219,8 @@ const FaceRecognition = ({ onFaceDetected, onError, registeredFaces = [] }) => {
           if (resizedDetections.length > 0) {
             const currentDescriptor = resizedDetections[0].descriptor;
             
-            // Verificar si el rostro está registrado
-            const matchResult = compareFaces(currentDescriptor, registeredFaces);
+            // Verificar si el rostro está registrado (threshold estricto para evitar confusiones)
+            const matchResult = compareFaces(currentDescriptor, registeredFaces, 0.5); // ⚠️ ESTRICTO: 0.5 para precisión máxima
             
             // Dibujar detecciones
             faceapi.draw.drawDetections(canvas, resizedDetections);

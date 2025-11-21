@@ -55,6 +55,22 @@ const FacialLogin = ({ onBack }) => {
     setStatus('processing');
     setMessage(`🔄 Verificando usuario: ${faceData.matchedUser?.name || 'Usuario'}...`);
 
+    // DEBUG: Logs para ver qué datos se están enviando
+    console.log('🔍 DEBUG FacialLogin - faceData completo:', faceData);
+    console.log('🔍 DEBUG FacialLogin - matchedUser:', faceData.matchedUser);
+    console.log('🔍 DEBUG FacialLogin - isAuthorized:', faceData.isAuthorized);
+
+    const dataToSend = {
+      userId: faceData.matchedUser?.id || faceData.matchedUser?.userId,
+      userName: faceData.matchedUser?.name || faceData.matchedUser?.fullName,
+      faceDescriptor: faceData.descriptor,
+      confidence: faceData.confidence,
+      isAuthorized: faceData.isAuthorized,
+      matchedUser: faceData.matchedUser
+    };
+
+    console.log('🔍 DEBUG FacialLogin - Datos a enviar:', dataToSend);
+
     try {
       // Enviar datos del usuario autorizado al backend
       const response = await fetch('/api/auth/facial-login', {
@@ -62,14 +78,7 @@ const FacialLogin = ({ onBack }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId: faceData.matchedUser?.id || faceData.matchedUser?.userId,
-          userName: faceData.matchedUser?.name || faceData.matchedUser?.fullName,
-          faceDescriptor: faceData.descriptor,
-          confidence: faceData.confidence,
-          isAuthorized: faceData.isAuthorized,
-          matchedUser: faceData.matchedUser
-        }),
+        body: JSON.stringify(dataToSend),
       });
 
       const result = await response.json();

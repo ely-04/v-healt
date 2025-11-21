@@ -128,14 +128,7 @@ const RegisterForm = ({ onToggle, onSuccess }) => {
       
       // Si el registro fue exitoso y tenemos un callback
       if (result && onSuccess) {
-        // Asegurarse de que el usuario tenga un ID
-        const userWithId = result.user || { 
-          id: result.id || Date.now(), // Usar ID del resultado o timestamp como fallback
-          name: formData.name, 
-          email: formData.email 
-        };
-        console.log('Usuario registrado:', userWithId);
-        onSuccess(userWithId);
+        onSuccess(result.user || { name: formData.name, email: formData.email });
       }
     } catch (err) {
       console.error('Error en registro:', err);

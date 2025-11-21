@@ -635,12 +635,28 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
 // Ruta para registro facial
 app.post('/api/auth/register-face', async (req, res) => {
   try {
+    console.log('🔍 DEBUG register-face - Body recibido:', req.body);
+    console.log('🔍 DEBUG register-face - Keys:', Object.keys(req.body));
+    
     const { userId, faceDescriptor, captureData } = req.body;
 
+    console.log('🔍 DEBUG register-face - userId:', userId, typeof userId);
+    console.log('🔍 DEBUG register-face - faceDescriptor presente:', !!faceDescriptor);
+    console.log('🔍 DEBUG register-face - faceDescriptor length:', faceDescriptor?.length);
+
     if (!userId || !faceDescriptor) {
+      console.log('❌ Validación fallida:');
+      console.log('- userId:', userId, 'presente:', !!userId);
+      console.log('- faceDescriptor:', 'presente:', !!faceDescriptor);
+      
       return res.status(400).json({
         success: false,
-        message: 'Datos incompletos'
+        message: 'Datos incompletos',
+        debug: {
+          userIdReceived: !!userId,
+          faceDescriptorReceived: !!faceDescriptor,
+          receivedFields: Object.keys(req.body)
+        }
       });
     }
 
@@ -734,31 +750,73 @@ app.get('/api/facial/registered-faces', async (req, res) => {
 // Ruta para login con reconocimiento facial
 app.post('/api/auth/facial-login', async (req, res) => {
   try {
+    console.log('🔍 DEBUG facial-login - Body recibido:', JSON.stringify({
+      userId: req.body.userId,
+      userName: req.body.userName,
+      confidence: req.body.confidence,
+      isAuthorized: req.body.isAuthorized,
+      hasFaceDescriptor: !!req.body.faceDescriptor,
+      faceDescriptorLength: req.body.faceDescriptor?.length,
+      hasMatchedUser: !!req.body.matchedUser,
+      matchedUserId: req.body.matchedUser?.id
+    }, null, 2));
+    
     const { userId, userName, faceDescriptor, confidence, isAuthorized, matchedUser } = req.body;
 
     console.log(`🔍 Login facial - Usuario: ${userName || 'Desconocido'}, Autorizado: ${isAuthorized}`);
+    console.log(`🔍 Datos recibidos:`, {
+      userId: userId,
+      userName: userName,
+      confidence: confidence,
+      isAuthorized: isAuthorized,
+      hasFaceDescriptor: !!faceDescriptor,
+      faceDescriptorLength: faceDescriptor?.length
+    });
 
-    // ✅ NUEVA VALIDACIÓN: Verificar que el rostro esté autorizado (validado en frontend)
+    // ✅ VALIDACIÓN: Verificar que el rostro esté autorizado y coincida con usuario específico
     if (!isAuthorized || !userId || !faceDescriptor) {
-      console.log('❌ Acceso denegado - Rostro no autorizado en frontend');
+      console.log('❌ Validación fallida:');
+      console.log('- isAuthorized:', isAuthorized);
+      console.log('- userId:', userId);
+      console.log('- faceDescriptor presente:', !!faceDescriptor);
+      
       return res.status(401).json({
         success: false,
-        message: 'Acceso no autorizado. Rostro no registrado en el sistema.'
+        message: 'Acceso no autorizado. Rostro no registrado o no coincide.',
+        debug: {
+          isAuthorized,
+          hasUserId: !!userId,
+          hasFaceDescriptor: !!faceDescriptor
+        }
       });
     }
 
-    if (!confidence || confidence < 60) {
+    // Validar que matchedUser coincida con datos enviados
+    if (matchedUser && matchedUser.id && matchedUser.id !== userId) {
+      console.log(`❌ Usuario no coincide: enviado ${userId}, detectado ${matchedUser.id}`);
+      return res.status(401).json({
+        success: false,
+        message: 'El rostro detectado no coincide con el usuario esperado.'
+      });
+    }
+
+    if (!confidence || confidence < 30) { // Reducir umbral de confianza a 30%
+      console.log(`❌ Confianza muy baja: ${confidence}%`);
       return res.status(400).json({
         success: false,
         message: 'Confianza de reconocimiento muy baja. Intenta nuevamente.'
       });
     }
 
-    // Buscar el usuario específico en la base de datos para confirmar
+    console.log(`✅ Confianza aceptable: ${confidence}%`);
+
+    // Buscar el usuario en la base de datos (cualquier usuario activo)
     const [users] = await connectionPool.execute(
       'SELECT id, email, name, role, faceDescriptor, isActive FROM users WHERE id = ? AND isActive = 1',
       [userId]
     );
+
+    console.log(`🔍 Búsqueda en BD para userId ${userId}:`, users.length, 'usuarios encontrados');
 
     if (users.length === 0) {
       console.log(`❌ Usuario ${userId} no encontrado en BD`);
@@ -770,15 +828,110 @@ app.post('/api/auth/facial-login', async (req, res) => {
 
     const user = users[0];
 
-    // Verificar que el usuario tiene descriptor facial
+    // Verificar que el usuario tiene descriptor facial registrado (OBLIGATORIO)
     if (!user.faceDescriptor) {
+      console.log(`❌ Usuario ${userId} sin faceDescriptor registrado`);
       return res.status(400).json({
         success: false,
-        message: 'Usuario sin reconocimiento facial registrado'
+        message: 'Usuario sin reconocimiento facial registrado. Debe configurar primero su rostro.'
       });
     }
 
     console.log(`✅ Login facial exitoso para: ${user.name} (${user.email}) - Confianza: ${confidence}%`);
+    console.log(`✅ Validación: Usuario autorizado con sus propios datos faciales`);
+
+    // ⚠️ VALIDACIÓN CRUZADA ESTRICTA: Comparar con TODOS los usuarios registrados
+    try {
+      const storedDescriptor = JSON.parse(user.faceDescriptor);
+      const currentDescriptor = faceDescriptor;
+      
+      const distance = euclideanDistance(currentDescriptor, storedDescriptor);
+      const maxDistance = 0.6; // ⚠️ THRESHOLD ESTRICTO: 0.6 para evitar confusión entre usuarios
+      
+      console.log(`🔍 Comparación de descriptores: distancia=${distance.toFixed(3)}, máximo=${maxDistance}`);
+      
+      if (distance > maxDistance) {
+        console.log(`❌ Distancia muy alta: ${distance.toFixed(3)} > ${maxDistance}`);
+        return res.status(401).json({
+          success: false,
+          message: 'El rostro no coincide con el registrado para este usuario.',
+          debug: {
+            distance: distance.toFixed(3),
+            threshold: maxDistance,
+            userId: userId,
+            userName: user.name
+          }
+        });
+      }
+      
+      console.log(`✅ Validación de descriptor exitosa: distancia=${distance.toFixed(3)}`);
+      
+      // ⚠️ VALIDACIÓN ADICIONAL: Verificar que no coincida mejor con otro usuario
+      const [allUsers] = await connectionPool.execute(
+        'SELECT id, name, email, faceDescriptor FROM users WHERE faceDescriptor IS NOT NULL AND isActive = 1'
+      );
+      
+      let closestMatch = { userId: user.id, distance: distance, userName: user.name };
+      let potentialConflicts = [];
+      
+      for (const otherUser of allUsers) {
+        if (otherUser.id !== userId) {
+          try {
+            const otherDescriptor = JSON.parse(otherUser.faceDescriptor);
+            const otherDistance = euclideanDistance(currentDescriptor, otherDescriptor);
+            
+            if (otherDistance < maxDistance) {
+              potentialConflicts.push({
+                userId: otherUser.id,
+                userName: otherUser.name,
+                distance: otherDistance.toFixed(3)
+              });
+            }
+            
+            if (otherDistance < closestMatch.distance) {
+              closestMatch = {
+                userId: otherUser.id,
+                distance: otherDistance,
+                userName: otherUser.name
+              };
+            }
+          } catch (err) {
+            console.warn(`⚠️ Error comparando con usuario ${otherUser.id}:`, err.message);
+          }
+        }
+      }
+      
+      // Si el rostro coincide mejor con otro usuario, denegar acceso
+      if (closestMatch.userId !== userId) {
+        console.log(`❌ ¡CONFUSIÓN DETECTADA! El rostro coincide mejor con otro usuario:`);
+        console.log(`   - Usuario solicitado: ${userId} (${user.name}) - distancia: ${distance.toFixed(3)}`);
+        console.log(`   - Usuario más cercano: ${closestMatch.userId} (${closestMatch.userName}) - distancia: ${closestMatch.distance.toFixed(3)}`);
+        
+        return res.status(401).json({
+          success: false,
+          message: 'Error de identificación: El rostro detectado pertenece a otro usuario.',
+          debug: {
+            requestedUser: { id: userId, name: user.name, distance: distance.toFixed(3) },
+            closestMatch: { id: closestMatch.userId, name: closestMatch.userName, distance: closestMatch.distance.toFixed(3) },
+            conflicts: potentialConflicts
+          }
+        });
+      }
+      
+      // Log de conflictos potenciales para monitoreo
+      if (potentialConflicts.length > 0) {
+        console.log(`⚠️ Advertencia: Conflictos potenciales detectados (${potentialConflicts.length}):`, potentialConflicts);
+      }
+      
+      console.log(`✅ Validación cruzada exitosa: Usuario ${userId} es el más cercano con distancia ${distance.toFixed(3)}`);
+      
+    } catch (error) {
+      console.error('❌ Error validando descriptor:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error validando datos faciales'
+      });
+    }
 
     // Actualizar último login
     await connectionPool.execute(

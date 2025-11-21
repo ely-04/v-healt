@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import FaceRecognition from './FaceRecognition-fixed';
+import FaceRecognition from './FaceRecognition';
 
 const FaceRegistration = ({ userData, onComplete, onSkip }) => {
   const [step, setStep] = useState(1); // 1: instrucciones, 2: captura, 3: confirmación
@@ -22,28 +22,20 @@ const FaceRegistration = ({ userData, onComplete, onSkip }) => {
   const handleFaceDetected = async (faceData) => {
     if (!isCapturing || status !== 'capturing') return;
 
-    // Para registro, no necesitamos validación de rostros registrados
-    // Solo verificamos la calidad de la detección
-    if (!faceData.descriptor || faceData.descriptor.length !== 128) {
+    // Verificar calidad de la detección
+    if (faceData.detection.score < 0.8) {
       setMessage('Calidad baja. Mejora la iluminación y mantente centrado.');
       return;
     }
 
-    // Verificar score si está disponible
-    const detectionScore = faceData.detection?.score || faceData.confidence || 0.85;
-    if (detectionScore < 0.7) {
-      setMessage('Calidad baja. Mejora la iluminación y mantente centrado.');
-      return;
-    }
-
-    // Capturar rostro cada intervalo
+    // Capturar rostro cada 1 segundo aproximadamente
     if (captureCount.current < requiredCaptures) {
       captureCount.current++;
       
       setCapturedFaces(prev => [...prev, {
         id: captureCount.current,
         descriptor: faceData.descriptor,
-        score: detectionScore,
+        score: faceData.detection.score,
         timestamp: new Date()
       }]);
 
@@ -76,25 +68,35 @@ const FaceRegistration = ({ userData, onComplete, onSkip }) => {
     setStatus('saving');
     setMessage('Guardando perfil facial...');
 
-    try {
-      // Verificar que userData existe y tiene id
-      if (!userData || !userData.id) {
-        throw new Error('Datos de usuario no disponibles. Asegúrate de haber completado el registro primero.');
-      }
+    // DEBUG: Verificar datos antes de enviar
+    console.log('🔍 DEBUG FaceRegistration - userData:', userData);
+    console.log('🔍 DEBUG FaceRegistration - userData.id:', userData?.id);
+    console.log('🔍 DEBUG FaceRegistration - capturedFaces:', capturedFaces.length);
 
+    if (!userData || !userData.id) {
+      console.error('❌ ERROR: userData o userData.id no está disponible');
+      setStatus('error');
+      setMessage('Error: Datos de usuario no disponibles. Reintenta el registro.');
+      return;
+    }
+
+    try {
       // Calcular descriptor promedio para mayor precisión
       const avgDescriptor = calculateAverageDescriptor(capturedFaces);
       
-      if (!avgDescriptor || avgDescriptor.length === 0) {
-        throw new Error('No se pudo procesar los datos del rostro. Intenta capturar nuevamente.');
+      if (!avgDescriptor) {
+        console.error('❌ ERROR: No se pudo calcular descriptor facial');
+        setStatus('error');
+        setMessage('Error: No se pudo procesar los datos faciales. Reintenta la captura.');
+        return;
       }
 
-      console.log('Enviando datos:', {
+      console.log('📤 Enviando datos faciales:', {
         userId: userData.id,
-        hasDescriptor: !!avgDescriptor,
-        descriptorLength: avgDescriptor?.length
+        descriptorLength: avgDescriptor.length,
+        capturesCount: capturedFaces.length
       });
-      
+
       const response = await fetch('/api/auth/register-face', {
         method: 'POST',
         headers: {
